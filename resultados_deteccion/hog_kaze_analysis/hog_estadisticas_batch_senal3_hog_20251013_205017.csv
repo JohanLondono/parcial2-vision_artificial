@@ -1,0 +1,2 @@
+imagen,dimensiones,num_caracteristicas,valor_min,valor_max,promedio,desviacion_std,energia_total,entropia,fecha_analisis
+batch_senal3_hog,854x1280,601020,0.0,0.9999999987499999,0.12900623346670623,0.10405459836873604,16509.999996036415,-85.11412764862432,2025-10-13T20:50:17.520687

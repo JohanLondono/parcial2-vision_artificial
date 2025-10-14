@@ -1,0 +1,1 @@
+# Utilidades para manejo de imágenes

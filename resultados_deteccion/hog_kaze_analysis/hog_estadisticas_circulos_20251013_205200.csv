@@ -1,0 +1,2 @@
+imagen,dimensiones,num_caracteristicas,valor_min,valor_max,promedio,desviacion_std,energia_total,entropia,fecha_analisis
+circulos,306x612,99900,0.0,0.44107599429168176,0.14775580685580733,0.07711030614315645,2774.9999995328853,-207.6277957879371,2025-10-13T20:52:00.035531

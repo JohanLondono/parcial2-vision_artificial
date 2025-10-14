@@ -1,0 +1,353 @@
+REPORTE DE PROCESAMIENTO POR LOTES
+============================================================
+Método: FREAK
+Fecha: 2025-10-13 19:59:40
+Carpeta procesada: ./images
+Imágenes procesadas: 15
+============================================================
+
+1. circulos
+   Ruta: ./images\circulos.jpg
+   freak_num_keypoints: 29.0000
+   freak_kp_mean_x: 284.6552
+   freak_kp_std_x: 146.6754
+   freak_kp_mean_y: 155.1034
+   freak_kp_std_y: 61.3016
+   freak_kp_mean_size: 8.0000
+   freak_kp_std_size: 5.0923
+   freak_kp_mean_response: 48.6196
+   freak_kp_density: 0.0002
+   freak_bit_ratio: 0.5315
+   freak_bit_entropy: -232.3362
+   freak_descriptor_diversity: 61.4680
+   freak_pattern_complexity: 228.2414
+   retina_center_density: 0.0000
+   retina_mid_density: 0.3103
+   retina_periphery_density: 0.6897
+   retina_radial_gradient: -0.6897
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_circulos
+   output_path: ./resultados_deteccion\advanced_analysis\batch_circulos_freak.png
+
+2. senal2
+   Ruta: ./images\senal2.jpg
+   freak_num_keypoints: 386.0000
+   freak_kp_mean_x: 347.6373
+   freak_kp_std_x: 131.4379
+   freak_kp_mean_y: 265.8705
+   freak_kp_std_y: 66.7404
+   freak_kp_mean_size: 7.4819
+   freak_kp_std_size: 5.1386
+   freak_kp_mean_response: 39.6948
+   freak_kp_density: 0.0013
+   freak_bit_ratio: 0.4818
+   freak_bit_entropy: -232.2407
+   freak_descriptor_diversity: 61.5388
+   freak_pattern_complexity: 211.0000
+   retina_center_density: 0.1244
+   retina_mid_density: 0.4741
+   retina_periphery_density: 0.4016
+   retina_radial_gradient: -0.2772
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_senal2
+   output_path: ./resultados_deteccion\advanced_analysis\batch_senal2_freak.png
+
+3. senal3
+   Ruta: ./images\senal3.jpg
+   freak_num_keypoints: 1203.0000
+   freak_kp_mean_x: 661.1596
+   freak_kp_std_x: 228.6378
+   freak_kp_mean_y: 476.0490
+   freak_kp_std_y: 187.4996
+   freak_kp_mean_size: 8.0266
+   freak_kp_std_size: 6.5846
+   freak_kp_mean_response: 39.6482
+   freak_kp_density: 0.0011
+   freak_bit_ratio: 0.5096
+   freak_bit_entropy: -232.2061
+   freak_descriptor_diversity: 60.5053
+   freak_pattern_complexity: 214.7000
+   retina_center_density: 0.1064
+   retina_mid_density: 0.4921
+   retina_periphery_density: 0.4015
+   retina_radial_gradient: -0.2951
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_senal3
+   output_path: ./resultados_deteccion\advanced_analysis\batch_senal3_freak.png
+
+4. senal4
+   Ruta: ./images\senal4.jpg
+   freak_num_keypoints: 747.0000
+   freak_kp_mean_x: 454.9438
+   freak_kp_std_x: 186.9919
+   freak_kp_mean_y: 475.5944
+   freak_kp_std_y: 178.0950
+   freak_kp_mean_size: 12.3240
+   freak_kp_std_size: 8.1851
+   freak_kp_mean_response: 40.0249
+   freak_kp_density: 0.0007
+   freak_bit_ratio: 0.5280
+   freak_bit_entropy: -232.3060
+   freak_descriptor_diversity: 61.3829
+   freak_pattern_complexity: 201.2600
+   retina_center_density: 0.1004
+   retina_mid_density: 0.5556
+   retina_periphery_density: 0.3440
+   retina_radial_gradient: -0.2436
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_senal4
+   output_path: ./resultados_deteccion\advanced_analysis\batch_senal4_freak.png
+
+5. trafico1
+   Ruta: ./images\trafico1.jpg
+   freak_num_keypoints: 49.0000
+   freak_kp_mean_x: 156.6531
+   freak_kp_std_x: 39.3667
+   freak_kp_mean_y: 84.1429
+   freak_kp_std_y: 9.0373
+   freak_kp_mean_size: 7.3061
+   freak_kp_std_size: 4.2484
+   freak_kp_mean_response: 41.6092
+   freak_kp_density: 0.0010
+   freak_bit_ratio: 0.5206
+   freak_bit_entropy: -232.2541
+   freak_descriptor_diversity: 62.3503
+   freak_pattern_complexity: 214.4490
+   retina_center_density: 0.3673
+   retina_mid_density: 0.4694
+   retina_periphery_density: 0.1633
+   retina_radial_gradient: 0.2041
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico1
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico1_freak.png
+
+6. trafico10
+   Ruta: ./images\trafico10.jpeg
+   freak_num_keypoints: 1673.0000
+   freak_kp_mean_x: 474.6575
+   freak_kp_std_x: 252.5131
+   freak_kp_mean_y: 313.5798
+   freak_kp_std_y: 126.2870
+   freak_kp_mean_size: 8.5607
+   freak_kp_std_size: 6.8626
+   freak_kp_mean_response: 47.1366
+   freak_kp_density: 0.0027
+   freak_bit_ratio: 0.4902
+   freak_bit_entropy: -232.2066
+   freak_descriptor_diversity: 61.7551
+   freak_pattern_complexity: 218.7800
+   retina_center_density: 0.0508
+   retina_mid_density: 0.2947
+   retina_periphery_density: 0.6545
+   retina_radial_gradient: -0.6037
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico10
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico10_freak.png
+
+7. trafico11
+   Ruta: ./images\trafico11.jpg
+   freak_num_keypoints: 86.0000
+   freak_kp_mean_x: 234.5000
+   freak_kp_std_x: 94.8828
+   freak_kp_mean_y: 148.3256
+   freak_kp_std_y: 36.9164
+   freak_kp_mean_size: 9.9767
+   freak_kp_std_size: 7.2976
+   freak_kp_mean_response: 37.5246
+   freak_kp_density: 0.0007
+   freak_bit_ratio: 0.5015
+   freak_bit_entropy: -232.1931
+   freak_descriptor_diversity: 60.1273
+   freak_pattern_complexity: 198.2200
+   retina_center_density: 0.1860
+   retina_mid_density: 0.2791
+   retina_periphery_density: 0.5349
+   retina_radial_gradient: -0.3488
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico11
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico11_freak.png
+
+8. trafico13
+   Ruta: ./images\trafico13.jpg
+   freak_num_keypoints: 483.0000
+   freak_kp_mean_x: 298.5590
+   freak_kp_std_x: 92.4510
+   freak_kp_mean_y: 223.6605
+   freak_kp_std_y: 85.0400
+   freak_kp_mean_size: 9.3540
+   freak_kp_std_size: 7.4476
+   freak_kp_mean_response: 42.0710
+   freak_kp_density: 0.0020
+   freak_bit_ratio: 0.4917
+   freak_bit_entropy: -232.2028
+   freak_descriptor_diversity: 62.2033
+   freak_pattern_complexity: 206.5800
+   retina_center_density: 0.2195
+   retina_mid_density: 0.5321
+   retina_periphery_density: 0.2484
+   retina_radial_gradient: -0.0290
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico13
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico13_freak.png
+
+9. trafico2
+   Ruta: ./images\trafico2.jpg
+   freak_num_keypoints: 653.0000
+   freak_kp_mean_x: 391.1853
+   freak_kp_std_x: 170.4248
+   freak_kp_mean_y: 158.0643
+   freak_kp_std_y: 56.2980
+   freak_kp_mean_size: 9.0046
+   freak_kp_std_size: 6.6334
+   freak_kp_mean_response: 48.1993
+   freak_kp_density: 0.0023
+   freak_bit_ratio: 0.4935
+   freak_bit_entropy: -232.1989
+   freak_descriptor_diversity: 61.9110
+   freak_pattern_complexity: 206.5200
+   retina_center_density: 0.0796
+   retina_mid_density: 0.3461
+   retina_periphery_density: 0.5743
+   retina_radial_gradient: -0.4946
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico2
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico2_freak.png
+
+10. trafico3
+   Ruta: ./images\trafico3.jpg
+   freak_num_keypoints: 23.0000
+   freak_kp_mean_x: 169.3913
+   freak_kp_std_x: 49.3556
+   freak_kp_mean_y: 76.2174
+   freak_kp_std_y: 6.5605
+   freak_kp_mean_size: 7.8261
+   freak_kp_std_size: 5.1046
+   freak_kp_mean_response: 41.6838
+   freak_kp_density: 0.0005
+   freak_bit_ratio: 0.4462
+   freak_bit_entropy: -232.6105
+   freak_descriptor_diversity: 60.5731
+   freak_pattern_complexity: 208.6522
+   retina_center_density: 0.1304
+   retina_mid_density: 0.5217
+   retina_periphery_density: 0.3478
+   retina_radial_gradient: -0.2174
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico3
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico3_freak.png
+
+11. trafico4
+   Ruta: ./images\trafico4.jpg
+   freak_num_keypoints: 20.0000
+   freak_kp_mean_x: 94.4000
+   freak_kp_std_x: 19.1348
+   freak_kp_mean_y: 99.0000
+   freak_kp_std_y: 23.3474
+   freak_kp_mean_size: 10.3000
+   freak_kp_std_size: 4.9910
+   freak_kp_mean_response: 43.5825
+   freak_kp_density: 0.0004
+   freak_bit_ratio: 0.5361
+   freak_bit_entropy: -232.3813
+   freak_descriptor_diversity: 61.7579
+   freak_pattern_complexity: 205.6000
+   retina_center_density: 0.2000
+   retina_mid_density: 0.8000
+   retina_periphery_density: 0.0000
+   retina_radial_gradient: 0.2000
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico4
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico4_freak.png
+
+12. trafico5
+   Ruta: ./images\trafico5.jpg
+   freak_num_keypoints: 1310.0000
+   freak_kp_mean_x: 562.2771
+   freak_kp_std_x: 294.0661
+   freak_kp_mean_y: 230.2443
+   freak_kp_std_y: 107.4342
+   freak_kp_mean_size: 9.7634
+   freak_kp_std_size: 7.8925
+   freak_kp_mean_response: 39.7740
+   freak_kp_density: 0.0014
+   freak_bit_ratio: 0.4994
+   freak_bit_entropy: -232.1929
+   freak_descriptor_diversity: 61.8473
+   freak_pattern_complexity: 218.9000
+   retina_center_density: 0.0298
+   retina_mid_density: 0.2679
+   retina_periphery_density: 0.7023
+   retina_radial_gradient: -0.6725
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico5
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico5_freak.png
+
+13. trafico6
+   Ruta: ./images\trafico6.jpg
+   freak_num_keypoints: 2976.0000
+   freak_kp_mean_x: 571.5833
+   freak_kp_std_x: 289.4599
+   freak_kp_mean_y: 386.6065
+   freak_kp_std_y: 163.5064
+   freak_kp_mean_size: 8.6277
+   freak_kp_std_size: 6.7281
+   freak_kp_mean_response: 42.2875
+   freak_kp_density: 0.0031
+   freak_bit_ratio: 0.4977
+   freak_bit_entropy: -232.1936
+   freak_descriptor_diversity: 61.6000
+   freak_pattern_complexity: 210.9600
+   retina_center_density: 0.1310
+   retina_mid_density: 0.3075
+   retina_periphery_density: 0.5615
+   retina_radial_gradient: -0.4304
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico6
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico6_freak.png
+
+14. trafico7
+   Ruta: ./images\trafico7.jpg
+   freak_num_keypoints: 2019.0000
+   freak_kp_mean_x: 684.9559
+   freak_kp_std_x: 273.1021
+   freak_kp_mean_y: 442.5196
+   freak_kp_std_y: 120.5215
+   freak_kp_mean_size: 9.3016
+   freak_kp_std_size: 7.4121
+   freak_kp_mean_response: 40.4064
+   freak_kp_density: 0.0022
+   freak_bit_ratio: 0.4997
+   freak_bit_entropy: -232.1928
+   freak_descriptor_diversity: 60.5061
+   freak_pattern_complexity: 202.9200
+   retina_center_density: 0.1322
+   retina_mid_density: 0.3299
+   retina_periphery_density: 0.5379
+   retina_radial_gradient: -0.4056
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico7
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico7_freak.png
+
+15. trafico8
+   Ruta: ./images\trafico8.jpg
+   freak_num_keypoints: 367.0000
+   freak_kp_mean_x: 283.3569
+   freak_kp_std_x: 131.6793
+   freak_kp_mean_y: 164.9428
+   freak_kp_std_y: 60.1035
+   freak_kp_mean_size: 8.7738
+   freak_kp_std_size: 6.7506
+   freak_kp_mean_response: 39.0285
+   freak_kp_density: 0.0015
+   freak_bit_ratio: 0.5089
+   freak_bit_entropy: -232.2042
+   freak_descriptor_diversity: 60.9445
+   freak_pattern_complexity: 221.2800
+   retina_center_density: 0.1008
+   retina_mid_density: 0.4196
+   retina_periphery_density: 0.4796
+   retina_radial_gradient: -0.3787
+   freak_algorithm_available: 1.0000
+   nombre_imagen: batch_trafico8
+   output_path: ./resultados_deteccion\advanced_analysis\batch_trafico8_freak.png
+

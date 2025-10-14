@@ -1,0 +1,2 @@
+imagen,dimensiones,num_puntos_clave,dimension_descriptor_bytes,dimension_descriptor_bits,densidad_puntos,fecha_analisis,hamming_distance_promedio,hamming_distance_std,ratio_bits_activos,entropia_descriptores,unicidad_descriptores
+circulos,306x612,500,32,256,0.0026699132812166263,2025-10-13T20:50:53.163342,31.361010101010102,1.1409614012270042,0.4754296875,-232.27994011230524,1.0

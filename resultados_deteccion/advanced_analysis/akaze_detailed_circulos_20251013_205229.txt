@@ -1,0 +1,78 @@
+ANÁLISIS DETALLADO AKAZE
+==================================================
+
+Imagen analizada: circulos
+Fecha y hora: 2025-10-13 20:52:29
+
+PUNTOS CLAVE DETECTADOS: 81
+------------------------------
+Punto 1:
+  Posición: (50.76, 28.96)
+  Tamaño: 4.80
+  Ángulo: 237.36°
+  Respuesta: 0.005146
+  Octava: 0
+
+Punto 2:
+  Posición: (201.09, 28.54)
+  Tamaño: 4.80
+  Ángulo: 62.91°
+  Respuesta: 0.006573
+  Octava: 0
+
+Punto 3:
+  Posición: (351.39, 29.07)
+  Tamaño: 4.80
+  Ángulo: 59.49°
+  Respuesta: 0.005442
+  Octava: 0
+
+Punto 4:
+  Posición: (417.09, 32.75)
+  Tamaño: 4.80
+  Ángulo: 126.63°
+  Respuesta: 0.004146
+  Octava: 0
+
+Punto 5:
+  Posición: (338.68, 40.01)
+  Tamaño: 4.80
+  Ángulo: 39.09°
+  Respuesta: 0.004470
+  Octava: 0
+
+Punto 6:
+  Posición: (186.42, 40.92)
+  Tamaño: 4.80
+  Ángulo: 222.88°
+  Respuesta: 0.006045
+  Octava: 0
+
+Punto 7:
+  Posición: (440.62, 64.93)
+  Tamaño: 4.80
+  Ángulo: 342.64°
+  Respuesta: 0.003886
+  Octava: 0
+
+Punto 8:
+  Posición: (36.34, 115.78)
+  Tamaño: 4.80
+  Ángulo: 148.78°
+  Respuesta: 0.005030
+  Octava: 0
+
+Punto 9:
+  Posición: (576.86, 120.04)
+  Tamaño: 4.80
+  Ángulo: 219.85°
+  Respuesta: 0.003290
+  Octava: 0
+
+Punto 10:
+  Posición: (345.30, 123.94)
+  Tamaño: 4.80
+  Ángulo: 315.21°
+  Respuesta: 0.003310
+  Octava: 0
+
