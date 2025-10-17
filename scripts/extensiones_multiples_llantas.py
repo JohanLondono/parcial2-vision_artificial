@@ -34,104 +34,99 @@ def agregar_metodos_multiples_llantas():
         Returns:
             dict: Resultados de todos los métodos
         """
-        print("🔍 Ejecutando TODOS los métodos de detección de llantas...")
+        print("Ejecutando TODOS los métodos de detección de llantas...")
         
-        # Definir métodos individuales (excluir combinado para evitar redundancia al final)
-        metodos = ['hough', 'akaze', 'textura']
+        # Definir configuraciones individuales basadas en el nuevo sistema
+        configuraciones = ['CONFIG_PRECISION_ALTA', 'CONFIG_ROBUSTA', 'CONFIG_ADAPTATIVA', 'CONFIG_BALANCED']
         resultados_completos = {}
         
-        for metodo in metodos:
-            print(f"\n  🔧 Ejecutando método: {metodo.upper()}")
+        for config in configuraciones:
+            print(f"\nEjecutando configuración: {config}")
             
-            # Crear ruta de salida específica para este método
+            # Crear ruta de salida específica para esta configuración
             if ruta_base and guardar:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                nombre_archivo = f"llantas_{metodo}_{timestamp}.jpg"
+                nombre_archivo = f"llantas_{config.lower()}_{timestamp}.jpg"
                 ruta_salida = os.path.join(ruta_base, "llantas", nombre_archivo)
                 os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
             else:
                 ruta_salida = None
             
-            # Ejecutar método específico
+            # Ejecutar configuración específica
             try:
                 inicio_tiempo = time.time()
                 
-                if metodo == 'hough':
-                    resultado = self._detectar_llantas_hough(imagen, visualizar, guardar, ruta_salida)
-                elif metodo == 'akaze':
-                    resultado = self._detectar_llantas_akaze(imagen, visualizar, guardar, ruta_salida)
-                elif metodo == 'textura':
-                    resultado = self._detectar_llantas_textura(imagen, visualizar, guardar, ruta_salida)
+                resultado = self.detectar_llantas(imagen, config, visualizar=False, guardar=guardar, ruta_salida=ruta_salida)
                 
                 tiempo_ejecucion = time.time() - inicio_tiempo
                 
                 if resultado:
                     # Agregar información adicional
                     resultado['tiempo_ejecucion'] = tiempo_ejecucion
-                    resultado['metodo_utilizado'] = metodo
+                    resultado['metodo_utilizado'] = config
                     resultado['imagen_info'] = {
                         'width': imagen.shape[1],
                         'height': imagen.shape[0],
                         'channels': imagen.shape[2] if len(imagen.shape) == 3 else 1
                     }
                     
-                    resultados_completos[metodo] = resultado
-                    print(f"    ✅ {metodo.upper()}: {len(resultado.get('llantas_detectadas', []))} llantas detectadas")
-                    print(f"    ⏱️  Tiempo: {tiempo_ejecucion:.3f} segundos")
+                    resultados_completos[config] = resultado
+                    print(f"{config}: {len(resultado.get('llantas_detectadas', []))} llantas detectadas")
+                    print(f"Tiempo: {tiempo_ejecucion:.3f} segundos")
                     
                     # Guardar información detallada del método
                     if guardar and ruta_base:
-                        self._guardar_info_deteccion_extendida(resultado, metodo, ruta_base)
+                        self._guardar_info_deteccion_extendida(resultado, config, ruta_base)
                 else:
-                    resultados_completos[metodo] = {'error': 'Falló la detección', 'tiempo_ejecucion': tiempo_ejecucion}
-                    print(f"    ❌ {metodo.upper()}: Error en detección")
+                    resultados_completos[config] = {'error': 'Falló la detección', 'tiempo_ejecucion': tiempo_ejecucion}
+                    print(f"{config}: Error en detección")
                     
             except Exception as e:
-                print(f"    ❌ {metodo.upper()}: Error - {e}")
-                resultados_completos[metodo] = {'error': str(e)}
+                print(f"{config}: Error - {e}")
+                resultados_completos[config] = {'error': str(e)}
         
-        # Ejecutar método combinado al final
-        print(f"\n  🚀 Ejecutando método: COMBINADO")
+        # Ejecutar configuración predeterminada al final
+        print("\nEjecutando configuración: CONFIG_BALANCED (predeterminada)")
         try:
             if ruta_base and guardar:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                nombre_archivo = f"llantas_combinado_{timestamp}.jpg"
+                nombre_archivo = f"llantas_balanced_final_{timestamp}.jpg"
                 ruta_salida = os.path.join(ruta_base, "llantas", nombre_archivo)
             else:
                 ruta_salida = None
                 
             inicio_tiempo = time.time()
-            resultado_combinado = self._detectar_llantas_combinado(imagen, visualizar, guardar, ruta_salida)
+            resultado_final = self.detectar_llantas(imagen, 'CONFIG_BALANCED', visualizar=visualizar, guardar=guardar, ruta_salida=ruta_salida)
             tiempo_ejecucion = time.time() - inicio_tiempo
             
-            if resultado_combinado:
-                resultado_combinado['tiempo_ejecucion'] = tiempo_ejecucion
-                resultado_combinado['metodo_utilizado'] = 'combinado'
-                resultado_combinado['imagen_info'] = {
+            if resultado_final:
+                resultado_final['tiempo_ejecucion'] = tiempo_ejecucion
+                resultado_final['metodo_utilizado'] = 'balanced_final'
+                resultado_final['imagen_info'] = {
                     'width': imagen.shape[1],
                     'height': imagen.shape[0],
                     'channels': imagen.shape[2] if len(imagen.shape) == 3 else 1
                 }
                 
-                resultados_completos['combinado'] = resultado_combinado
-                print(f"    ✅ COMBINADO: {len(resultado_combinado.get('llantas_detectadas', []))} llantas detectadas")
-                print(f"    ⏱️  Tiempo: {tiempo_ejecucion:.3f} segundos")
+                resultados_completos['balanced_final'] = resultado_final
+                print(f"BALANCED_FINAL: {len(resultado_final.get('llantas_detectadas', []))} llantas detectadas")
+                print(f"Tiempo: {tiempo_ejecucion:.3f} segundos")
                 
                 if guardar and ruta_base:
-                    self._guardar_info_deteccion_extendida(resultado_combinado, 'combinado', ruta_base)
+                    self._guardar_info_deteccion_extendida(resultado_final, 'balanced_final', ruta_base)
             else:
-                resultados_completos['combinado'] = {'error': 'Falló la detección combinada', 'tiempo_ejecucion': tiempo_ejecucion}
-                print(f"    ❌ COMBINADO: Error en detección")
+                resultados_completos['balanced_final'] = {'error': 'Falló la detección final', 'tiempo_ejecucion': tiempo_ejecucion}
+                print("BALANCED_FINAL: Error en detección")
                 
         except Exception as e:
-            print(f"    ❌ COMBINADO: Error - {e}")
-            resultados_completos['combinado'] = {'error': str(e)}
+            print(f"BALANCED_FINAL: Error - {e}")
+            resultados_completos['balanced_final'] = {'error': str(e)}
         
         # Generar reporte comparativo
         if guardar and ruta_base:
             self._generar_reporte_comparativo(resultados_completos, ruta_base)
         
-        print(f"\n🎉 Detección completa de llantas finalizada. {len(resultados_completos)} métodos ejecutados.")
+        print(f"\nDetección completa de llantas finalizada. {len(resultados_completos)} métodos ejecutados.")
         return resultados_completos
     
     def _guardar_info_deteccion_extendida(self, resultado, metodo, ruta_base):
@@ -233,10 +228,10 @@ def agregar_metodos_multiples_llantas():
                     f.write(f"  Píxeles segmentados: {np.count_nonzero(resultado['mask'])}\n")
                     f.write(f"  Porcentaje de imagen segmentada: {np.count_nonzero(resultado['mask']) / resultado['mask'].size * 100:.2f}%\n")
                 
-            print(f"    📄 Reporte detallado guardado: {ruta_reporte}")
+            print(f"Reporte detallado guardado: {ruta_reporte}")
             
         except Exception as e:
-            print(f"    ⚠️  Error guardando reporte: {e}")
+            print(f"Error guardando reporte: {e}")
     
     def _generar_reporte_comparativo(self, resultados_completos, ruta_base):
         """
@@ -312,17 +307,17 @@ def agregar_metodos_multiples_llantas():
                     metodo_mas_detecciones = max(detecciones, key=detecciones.get)
                     f.write(f"  Método con más detecciones: {metodo_mas_detecciones.upper()} ({detecciones[metodo_mas_detecciones]} llantas)\n")
                 
-            print(f"📊 Reporte comparativo guardado: {ruta_reporte}")
+            print(f"Reporte comparativo guardado: {ruta_reporte}")
             
         except Exception as e:
-            print(f"⚠️  Error generando reporte comparativo: {e}")
+            print(f"Error generando reporte comparativo: {e}")
     
     # Agregar los métodos a la clase DetectorLlantas
     DetectorLlantas.detectar_llantas_todos_metodos = detectar_llantas_todos_metodos
     DetectorLlantas._guardar_info_deteccion_extendida = _guardar_info_deteccion_extendida
     DetectorLlantas._generar_reporte_comparativo = _generar_reporte_comparativo
     
-    print("✅ Métodos múltiples agregados al DetectorLlantas")
+    print("Métodos múltiples agregados al DetectorLlantas")
 
 # Función de utilidad para usar desde el sistema principal
 def detectar_llantas_imagen_todos_metodos(ruta_imagen, ruta_salida="./resultados_deteccion"):

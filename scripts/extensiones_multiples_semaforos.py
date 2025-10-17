@@ -34,14 +34,14 @@ def agregar_metodos_multiples_semaforos():
         Returns:
             dict: Resultados de todos los métodos
         """
-        print("🔍 Ejecutando TODOS los métodos de detección de semáforos...")
+        print("Ejecutando TODOS los métodos de detección de semáforos...")
         
         # Definir métodos individuales (excluir combinado para evitar redundancia al final)
         metodos = ['color', 'estructura', 'grabcut']
         resultados_completos = {}
         
         for metodo in metodos:
-            print(f"\n  🔧 Ejecutando método: {metodo.upper()}")
+            print(f"\nEjecutando método: {metodo.upper()}")
             
             # Crear ruta de salida específica para este método
             if ruta_base and guardar:
@@ -76,22 +76,22 @@ def agregar_metodos_multiples_semaforos():
                     }
                     
                     resultados_completos[metodo] = resultado
-                    print(f"    ✅ {metodo.upper()}: {len(resultado.get('semaforos_detectados', []))} semáforos detectados")
-                    print(f"    ⏱️  Tiempo: {tiempo_ejecucion:.3f} segundos")
+                    print(f"{metodo.upper()}: {len(resultado.get('semaforos_detectados', []))} semáforos detectados")
+                    print(f"Tiempo: {tiempo_ejecucion:.3f} segundos")
                     
                     # Guardar información detallada del método
                     if guardar and ruta_base:
                         self._guardar_info_deteccion_extendida(resultado, metodo, ruta_base)
                 else:
                     resultados_completos[metodo] = {'error': 'Falló la detección', 'tiempo_ejecucion': tiempo_ejecucion}
-                    print(f"    ❌ {metodo.upper()}: Error en detección")
+                    print(f"{metodo.upper()}: Error en detección")
                     
             except Exception as e:
-                print(f"    ❌ {metodo.upper()}: Error - {e}")
+                print(f"{metodo.upper()}: Error - {e}")
                 resultados_completos[metodo] = {'error': str(e)}
         
         # Ejecutar método combinado al final
-        print(f"\n  🚀 Ejecutando método: COMBINADO")
+        print(f"\nEjecutando método: COMBINADO")
         try:
             if ruta_base and guardar:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -114,24 +114,24 @@ def agregar_metodos_multiples_semaforos():
                 }
                 
                 resultados_completos['combinado'] = resultado_combinado
-                print(f"    ✅ COMBINADO: {len(resultado_combinado.get('semaforos_detectados', []))} semáforos detectados")
-                print(f"    ⏱️  Tiempo: {tiempo_ejecucion:.3f} segundos")
+                print(f"COMBINADO: {len(resultado_combinado.get('semaforos_detectados', []))} semáforos detectados")
+                print(f"Tiempo: {tiempo_ejecucion:.3f} segundos")
                 
                 if guardar and ruta_base:
                     self._guardar_info_deteccion_extendida(resultado_combinado, 'combinado', ruta_base)
             else:
                 resultados_completos['combinado'] = {'error': 'Falló la detección combinada', 'tiempo_ejecucion': tiempo_ejecucion}
-                print(f"    ❌ COMBINADO: Error en detección")
+                print(f"COMBINADO: Error en detección")
                 
         except Exception as e:
-            print(f"    ❌ COMBINADO: Error - {e}")
+            print(f"COMBINADO: Error - {e}")
             resultados_completos['combinado'] = {'error': str(e)}
         
         # Generar reporte comparativo
         if guardar and ruta_base:
             self._generar_reporte_comparativo(resultados_completos, ruta_base)
         
-        print(f"\n🎉 Detección completa de semáforos finalizada. {len(resultados_completos)} métodos ejecutados.")
+        print(f"\nDetección completa de semáforos finalizada. {len(resultados_completos)} métodos ejecutados.")
         return resultados_completos
     
     def _guardar_info_deteccion_extendida(self, resultado, metodo, ruta_base):
@@ -244,10 +244,10 @@ def agregar_metodos_multiples_semaforos():
                     f.write(f"  Píxeles segmentados: {np.count_nonzero(resultado['mask'])}\n")
                     f.write(f"  Porcentaje de imagen segmentada: {np.count_nonzero(resultado['mask']) / resultado['mask'].size * 100:.2f}%\n")
                 
-            print(f"    📄 Reporte detallado guardado: {ruta_reporte}")
+            print(f"Reporte detallado guardado: {ruta_reporte}")
             
         except Exception as e:
-            print(f"    ⚠️  Error guardando reporte: {e}")
+            print(f"Error guardando reporte: {e}")
     
     def _generar_reporte_comparativo(self, resultados_completos, ruta_base):
         """
@@ -333,17 +333,17 @@ def agregar_metodos_multiples_semaforos():
                 f.write(f"    - GRABCUT: Mejor para segmentación precisa\n")
                 f.write(f"    - COMBINADO: Enfoque más robusto general\n")
                 
-            print(f"📊 Reporte comparativo guardado: {ruta_reporte}")
+            print(f"Reporte comparativo guardado: {ruta_reporte}")
             
         except Exception as e:
-            print(f"⚠️  Error generando reporte comparativo: {e}")
+            print(f"Error generando reporte comparativo: {e}")
     
     # Agregar los métodos a la clase DetectorSemaforos
     DetectorSemaforos.detectar_semaforos_todos_metodos = detectar_semaforos_todos_metodos
     DetectorSemaforos._guardar_info_deteccion_extendida = _guardar_info_deteccion_extendida
     DetectorSemaforos._generar_reporte_comparativo = _generar_reporte_comparativo
     
-    print("✅ Métodos múltiples agregados al DetectorSemaforos")
+    print("Métodos múltiples agregados al DetectorSemaforos")
 
 if __name__ == "__main__":
     # Prueba del sistema

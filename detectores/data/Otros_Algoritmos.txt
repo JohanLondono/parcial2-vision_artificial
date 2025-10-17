@@ -1,0 +1,93 @@
+AKAZE:
+Métrica,Valor
+Algoritmo,AKAZE
+Puntos clave detectados,171
+Densidad de puntos,0.00339286
+Ubicación promedio X,149.81
+Ubicación promedio Y,85.40
+Tamaño promedio,5.49
+Respuesta promedio,0.006288
+Número de escalas,2
+Entropía de escalas,0.8157
+Estabilidad multi-escala,4514.1095
+
+PUNTOS CLAVE DETECTADOS: 171
+------------------------------
+Punto 1:
+  Posición: (143.71, 33.60)
+  Tamaño: 4.80
+  Ángulo: 160.56°
+  Respuesta: 0.003919
+  Octava: 0
+  
+FREAK:
+Métrica,Valor
+Algoritmo,FREAK
+Puntos clave detectados,49
+Densidad de puntos,0.00097222
+Ubicación promedio X,156.65
+Ubicación promedio Y,84.14
+Tamaño promedio,7.31
+Respuesta promedio,41.609227
+Ratio de bits activos,0.5206
+Entropía de bits,-232.2541
+Diversidad de descriptores,62.3503
+Complejidad de patrón,214.4490
+Densidad centro retina,0.3673
+Densidad periferia retina,0.1633
+
+PUNTOS CLAVE DETECTADOS: 49
+------------------------------
+Punto 1:
+  Posición: (169.00, 70.00)
+  Tamaño: 4.00
+  Ángulo: 36.09°
+  Respuesta: 30.000000
+  
+GrabCut:
+Métrica,Valor
+Algoritmo,GrabCut
+Ratio primer plano,0.384801
+Ratio fondo,0.615199
+Número de regiones,14
+Área región más grande,237621.0
+Área promedio regiones,17027.43
+Compacidad promedio,0.7587
+Solidez promedio,0.8894
+Coherencia de bordes,0.6291
+
+ESTADÍSTICAS DE SEGMENTACIÓN:
+------------------------------
+Iteraciones GrabCut: 5
+Píxeles de primer plano: 715152
+Píxeles de fondo: 1143348
+Número de regiones conectadas: 14
+
+OPTICAL FLOW
+Métrica,Valor
+Algoritmo,Farneback Optical Flow
+Magnitud promedio,0.178133
+Magnitud máxima,16.454674
+Desviación magnitud,0.659455
+Ángulo promedio (rad),3.048430
+Ángulo promedio (grados),174.66
+Dirección dominante,180°
+Entropía direccional,0.0895
+Ratio píxeles en movimiento,0.0104
+Coherencia espacial,13.3342
+
+CONFIGURACIÓN DEL ALGORITMO:
+------------------------------
+Algoritmo: Farneback (Flujo óptico denso)
+Escala piramidal: 0.5
+Niveles piramidales: 3
+Tamaño de ventana: 15
+Iteraciones: 3
+Orden polinomial: 5
+Sigma polinomial: 1.2
+
+ESTADÍSTICAS DE MOVIMIENTO:
+------------------------------
+Campo de flujo calculado para imagen de dimensiones: (350, 450)
+Magnitud promedio del movimiento: 0.178133
+Porcentaje de píxeles en movimiento: 1.04%

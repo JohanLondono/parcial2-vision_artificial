@@ -463,11 +463,11 @@ class DetectorSemaforos:
         )
         
         if circles is None:
-            print("  ⚠️  No se detectaron círculos (luces de semáforo)")
+            print("No se detectaron círculos (luces de semáforo)")
             circles = np.array([])
         else:
             circles = np.round(circles[0, :]).astype("int")
-            print(f"  ✓ Círculos detectados: {len(circles)}")
+            print(f"Círculos detectados: {len(circles)}")
         
         # ============================================
         # PASO 3: Análisis de color HSV
@@ -490,7 +490,7 @@ class DetectorSemaforos:
             kp_akaze, _ = akaze.detectAndCompute(imagen_eq, None)
             print(f"  ✓ AKAZE: {len(kp_akaze)} keypoints")
         except Exception as e:
-            print(f"  ⚠️  AKAZE no disponible: {e}")
+            print(f"AKAZE no disponible: {e}")
             kp_akaze = []
         
         # ============================================

@@ -217,7 +217,7 @@ class HOGKAZEAnalyzer:
             >>> print(f"Características extraídas: {resultados['num_features']}")
             >>> print(f"Orientación dominante: {resultados['dominant_orientation']}°")
         """
-        print("🔍 Extrayendo características HOG...")
+        print("Extrayendo características HOG...")
         print("="*60)
         
         # Convertir a escala de grises
@@ -241,29 +241,29 @@ class HOGKAZEAnalyzer:
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"📊 ANÁLISIS DE CARACTERÍSTICAS HOG - {nombre_imagen.upper()}")
+            print(f"ANÁLISIS DE CARACTERÍSTICAS HOG - {nombre_imagen.upper()}")
             print("="*60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
-            print(f"🎯 Número de características HOG extraídas: {len(hog_features)}")
-            print(f"📊 Forma del vector de características: {hog_features.shape}")
-            print("\n📈 Estadísticas de las características:")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Número de características HOG extraídas: {len(hog_features)}")
+            print(f"Forma del vector de características: {hog_features.shape}")
+            print("\nEstadísticas de las características:")
             print(f"   • Valor mínimo: {np.min(hog_features):.8f}")
             print(f"   • Valor máximo: {np.max(hog_features):.8f}")
             print(f"   • Promedio: {np.mean(hog_features):.8f}")
             print(f"   • Desviación estándar: {np.std(hog_features):.8f}")
             print(f"   • Energía total: {np.sum(hog_features**2):.6f}")
             
-            print(f"\n🔍 Primeras 20 características HOG:")
+            print(f"\nPrimeras 20 características HOG:")
             for i in range(min(20, len(hog_features))):
                 print(f"   Característica {i+1:3d}: {hog_features[i]:15.8f}")
             
             if len(hog_features) > 20:
-                print(f"\n🔍 Últimas 10 características HOG:")
+                print(f"\nÚltimas 10 características HOG:")
                 start_idx = max(0, len(hog_features) - 10)
                 for i in range(start_idx, len(hog_features)):
                     print(f"   Característica {i+1:3d}: {hog_features[i]:15.8f}")
             
-            print(f"\n💾 Para ver todas las {len(hog_features)} características, active guardar_resultados=True")
+            print(f"\nPara ver todas las {len(hog_features)} características, active guardar_resultados=True")
             print("="*60)
         
         # Análisis estadístico de características HOG
@@ -436,7 +436,7 @@ class HOGKAZEAnalyzer:
             KAZE es especialmente efectivo para imágenes con bordes nítidos y detalles finos,
             como señales de tráfico, matrículas y texturas vehiculares.
         """
-        print("🔍 Extrayendo características KAZE...")
+        print("Extrayendo características KAZE...")
         print("="*60)
         
         # Convertir a escala de grises
@@ -449,7 +449,7 @@ class HOGKAZEAnalyzer:
         if usar_config_default:
             # Configuración por defecto (como la profesora)
             kaze = cv2.KAZE_create()
-            print("🔧 Usando configuración KAZE por defecto (como la profesora)")
+            print("Usando configuración KAZE por defecto")
         else:
             # Configuración avanzada personalizada
             kaze = cv2.KAZE_create(
@@ -460,33 +460,33 @@ class HOGKAZEAnalyzer:
                 nOctaveLayers=self.kaze_config['nOctaveLayers'],
                 diffusivity=self.kaze_config['diffusivity']
             )
-            print("🔧 Usando configuración KAZE avanzada")
+            print("Usando configuración KAZE avanzada")
         
         # Detectar puntos clave y calcular descriptores
         keypoints, descriptors = kaze.detectAndCompute(imagen_gris, None)
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"🔑 ANÁLISIS DE CARACTERÍSTICAS KAZE - {nombre_imagen.upper()}")
+            print(f"ANÁLISIS DE CARACTERÍSTICAS KAZE - {nombre_imagen.upper()}")
             print("="*60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
-            print(f"🎯 Número de puntos clave detectados: {len(keypoints)}")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Número de puntos clave detectados: {len(keypoints)}")
             
             if descriptors is not None:
-                print(f"📊 Forma de la matriz de descriptores: {descriptors.shape}")
-                print(f"🔢 Dimensión de cada descriptor: {descriptors.shape[1]}")
-                print(f"📈 Total de descriptores: {descriptors.shape[0]}")
+                print(f"Forma de la matriz de descriptores: {descriptors.shape}")
+                print(f"Dimensión de cada descriptor: {descriptors.shape[1]}")
+                print(f"Total de descriptores: {descriptors.shape[0]}")
                 
-                print("\n📊 Estadísticas de los descriptores:")
+                print("\nEstadísticas de los descriptores:")
                 print(f"   • Valor mínimo: {np.min(descriptors):.8f}")
                 print(f"   • Valor máximo: {np.max(descriptors):.8f}")
                 print(f"   • Promedio: {np.mean(descriptors):.8f}")
                 print(f"   • Desviación estándar: {np.std(descriptors):.8f}")
                 
-                print(f"\n🔍 Información detallada de los primeros 5 puntos clave:")
+                print(f"\nInformación detallada de los primeros 5 puntos clave:")
                 for i in range(min(5, len(keypoints))):
                     kp = keypoints[i]
-                    print(f"   📍 Punto clave {i+1}:")
+                    print(f"  Punto clave {i+1}:")
                     print(f"      • Posición (x,y): ({kp.pt[0]:.2f}, {kp.pt[1]:.2f})")
                     print(f"      • Tamaño: {kp.size:.2f}")
                     print(f"      • Ángulo: {kp.angle:.2f}°")
@@ -494,18 +494,18 @@ class HOGKAZEAnalyzer:
                     print(f"      • Descriptor (primeros 10 valores): {descriptors[i][:10]}")
                 
                 if len(keypoints) > 0:
-                    print(f"\n🎯 Descriptor completo del primer punto clave:")
+                    print(f"\nDescriptor completo del primer punto clave:")
                     descriptor_str = ', '.join([f"{val:.8f}" for val in descriptors[0]])
                     print(f"   Descriptor 1: [{descriptor_str}]")
                     
                     if len(keypoints) > 1:
-                        print(f"\n🎯 Descriptor completo del último punto clave:")
+                        print(f"\nDescriptor completo del último punto clave:")
                         descriptor_str = ', '.join([f"{val:.8f}" for val in descriptors[-1]])
                         print(f"   Descriptor {len(keypoints)}: [{descriptor_str}]")
                 
-                print(f"\n💾 Para ver todos los {len(keypoints)} descriptores completos, active guardar_resultados=True")
+                print(f"\nPara ver todos los {len(keypoints)} descriptores completos, active guardar_resultados=True")
             else:
-                print("❌ No se pudieron calcular descriptores")
+                print("No se pudieron calcular descriptores")
             
             print("="*60)
         
@@ -636,7 +636,7 @@ class HOGKAZEAnalyzer:
             if nombre_imagen is None:
                 nombre_imagen = os.path.basename(imagen_path)
             
-            print(f"🔄 Análisis HOG-KAZE para: {nombre_imagen}")
+            print(f"Análisis HOG-KAZE para: {nombre_imagen}")
             
             # Análisis HOG
             resultados_hog = self.extraer_caracteristicas_hog(imagen, visualizar=False)
@@ -662,11 +662,11 @@ class HOGKAZEAnalyzer:
             
             self.current_results.append(resultado_completo)
             
-            print(f"✅ Análisis HOG-KAZE completado para: {nombre_imagen}")
+            print(f"Análisis HOG-KAZE completado para: {nombre_imagen}")
             return resultado_completo
             
         except Exception as e:
-            print(f"❌ Error al procesar {imagen_path}: {str(e)}")
+            print(f"Error al procesar {imagen_path}: {str(e)}")
             return None
     
     def _extraer_lbp(self, imagen):
@@ -825,7 +825,7 @@ class HOGKAZEAnalyzer:
     def guardar_resultados(self, formato='csv'):
         """Guarda los resultados del análisis."""
         if not self.current_results:
-            print("❌ No hay resultados para guardar.")
+            print("No hay resultados para guardar.")
             return
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -834,30 +834,30 @@ class HOGKAZEAnalyzer:
             df = pd.DataFrame(self.current_results)
             archivo_csv = os.path.join(self.results_dir, f'hog_kaze_analysis_{timestamp}.csv')
             df.to_csv(archivo_csv, index=False)
-            print(f"💾 Resultados CSV guardados: {archivo_csv}")
+            print(f"Resultados CSV guardados: {archivo_csv}")
         
         elif formato.lower() == 'json':
             import json
             archivo_json = os.path.join(self.results_dir, f'hog_kaze_analysis_{timestamp}.json')
             with open(archivo_json, 'w', encoding='utf-8') as f:
                 json.dump(self.current_results, f, indent=2, ensure_ascii=False, default=str)
-            print(f"💾 Resultados JSON guardados: {archivo_json}")
+            print(f"Resultados JSON guardados: {archivo_json}")
     
     def generar_reporte_hog_kaze(self):
         """Genera reporte del análisis HOG-KAZE."""
         if not self.current_results:
-            print("❌ No hay resultados para el reporte.")
+            print("No hay resultados para el reporte.")
             return
         
-        print("\n📋 REPORTE ANÁLISIS HOG + KAZE")
+        print("\nREPORTE ANÁLISIS HOG + KAZE")
         print("=" * 40)
-        print(f"📊 Imágenes analizadas: {len(self.current_results)}")
+        print(f"Imágenes analizadas: {len(self.current_results)}")
         
         # Estadísticas HOG
         hog_features = [r.get('hog_num_features', 0) for r in self.current_results]
         hog_energies = [r.get('hog_hog_energy', 0) for r in self.current_results]
         
-        print(f"\n🎯 ESTADÍSTICAS HOG:")
+        print(f"\nESTADÍSTICAS HOG:")
         print(f"   Características promedio: {np.mean(hog_features):.0f}")
         print(f"   Energía promedio: {np.mean(hog_energies):.2f}")
         
@@ -865,7 +865,7 @@ class HOGKAZEAnalyzer:
         kaze_keypoints = [r.get('kaze_num_keypoints', 0) for r in self.current_results]
         kaze_density = [r.get('kaze_kp_density', 0) for r in self.current_results]
         
-        print(f"\n🔑 ESTADÍSTICAS KAZE:")
+        print(f"\nESTADÍSTICAS KAZE:")
         print(f"   Puntos clave promedio: {np.mean(kaze_keypoints):.1f}")
         print(f"   Densidad promedio: {np.mean(kaze_density):.6f}")
         
@@ -873,14 +873,14 @@ class HOGKAZEAnalyzer:
         imagenes_hog = [(r['Imagen'], r.get('hog_hog_energy', 0)) for r in self.current_results]
         imagenes_hog.sort(key=lambda x: x[1], reverse=True)
         
-        print(f"\n🏆 TOP 3 - MAYOR ENERGÍA HOG:")
+        print(f"\nTOP 3 - MAYOR ENERGÍA HOG:")
         for i, (imagen, energia) in enumerate(imagenes_hog[:3], 1):
             print(f"   {i}. {imagen}: {energia:.2f}")
         
         imagenes_kaze = [(r['Imagen'], r.get('kaze_num_keypoints', 0)) for r in self.current_results]
         imagenes_kaze.sort(key=lambda x: x[1], reverse=True)
         
-        print(f"\n🎯 TOP 3 - MÁS PUNTOS CLAVE KAZE:")
+        print(f"\nTOP 3 - MÁS PUNTOS CLAVE KAZE:")
         for i, (imagen, puntos) in enumerate(imagenes_kaze[:3], 1):
             print(f"   {i}. {imagen}: {puntos} puntos")
         
@@ -911,7 +911,7 @@ class HOGKAZEAnalyzer:
         df_stats = pd.DataFrame([hog_data])
         archivo_csv_stats = os.path.join(self.results_dir, f'hog_estadisticas_{nombre_imagen}_{timestamp}.csv')
         df_stats.to_csv(archivo_csv_stats, index=False, encoding='utf-8')
-        print(f"✅ Estadísticas HOG guardadas en: {archivo_csv_stats}")
+        print(f"Estadísticas HOG guardadas en: {archivo_csv_stats}")
         
         # Guardar características completas en CSV
         df_features = pd.DataFrame({
@@ -920,7 +920,7 @@ class HOGKAZEAnalyzer:
         })
         archivo_csv_features = os.path.join(self.results_dir, f'hog_caracteristicas_{nombre_imagen}_{timestamp}.csv')
         df_features.to_csv(archivo_csv_features, index=False, encoding='utf-8')
-        print(f"✅ Características HOG completas guardadas en: {archivo_csv_features}")
+        print(f"Características HOG completas guardadas en: {archivo_csv_features}")
         
         # Guardar reporte completo en TXT
         archivo_txt = os.path.join(self.results_dir, f'hog_reporte_completo_{nombre_imagen}_{timestamp}.txt')
@@ -946,8 +946,8 @@ class HOGKAZEAnalyzer:
             for i, feature in enumerate(resultados['hog_features_raw'].flatten(), 1):
                 f.write(f"Característica {i:4d}: {feature:18.8f}\n")
         
-        print(f"✅ Reporte HOG completo guardado en: {archivo_txt}")
-        print(f"📊 Total de archivos generados: 3 (CSV estadísticas, CSV características, TXT reporte)")
+        print(f"Reporte HOG completo guardado en: {archivo_txt}")
+        print(f"Total de archivos generados: 3 (CSV estadísticas, CSV características, TXT reporte)")
     
     def _guardar_resultados_kaze(self, resultados, nombre_imagen):
         """Guarda los resultados KAZE en archivos CSV y TXT."""
@@ -978,7 +978,7 @@ class HOGKAZEAnalyzer:
         df_stats = pd.DataFrame([kaze_stats])
         archivo_csv_stats = os.path.join(self.results_dir, f'kaze_estadisticas_{nombre_imagen}_{timestamp}.csv')
         df_stats.to_csv(archivo_csv_stats, index=False, encoding='utf-8')
-        print(f"✅ Estadísticas KAZE guardadas en: {archivo_csv_stats}")
+        print(f"Estadísticas KAZE guardadas en: {archivo_csv_stats}")
         
         # Guardar información de puntos clave en CSV
         if resultados['keypoints']:
@@ -996,7 +996,7 @@ class HOGKAZEAnalyzer:
             df_keypoints = pd.DataFrame(keypoints_data)
             archivo_csv_keypoints = os.path.join(self.results_dir, f'kaze_puntos_clave_{nombre_imagen}_{timestamp}.csv')
             df_keypoints.to_csv(archivo_csv_keypoints, index=False, encoding='utf-8')
-            print(f"✅ Puntos clave KAZE guardados en: {archivo_csv_keypoints}")
+            print(f"Puntos clave KAZE guardados en: {archivo_csv_keypoints}")
         
         # Guardar descriptores completos en CSV
         if resultados['descriptors'] is not None:
@@ -1006,7 +1006,7 @@ class HOGKAZEAnalyzer:
             
             archivo_csv_descriptors = os.path.join(self.results_dir, f'kaze_descriptores_{nombre_imagen}_{timestamp}.csv')
             df_descriptors.to_csv(archivo_csv_descriptors, index=False, encoding='utf-8')
-            print(f"✅ Descriptores KAZE completos guardados en: {archivo_csv_descriptors}")
+            print(f"Descriptores KAZE completos guardados en: {archivo_csv_descriptors}")
         
         # Guardar reporte completo en TXT
         archivo_txt = os.path.join(self.results_dir, f'kaze_reporte_completo_{nombre_imagen}_{timestamp}.txt')
@@ -1041,9 +1041,9 @@ class HOGKAZEAnalyzer:
                     f.write(f"    [{descriptor_str}]\n")
                 f.write("\n")
         
-        print(f"✅ Reporte KAZE completo guardado en: {archivo_txt}")
+        print(f"Reporte KAZE completo guardado en: {archivo_txt}")
         archivos_generados = 2 + (1 if resultados['keypoints'] else 0) + (1 if resultados['descriptors'] is not None else 0)
-        print(f"📊 Total de archivos generados: {archivos_generados}")
+        print(f"Total de archivos generados: {archivos_generados}")
 
 # Función de utilidad
 def analizar_hog_kaze_imagen(imagen_path, output_dir="./resultados"):

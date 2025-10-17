@@ -78,7 +78,7 @@ class SURFORBAnalyzer:
         Returns:
             dict: Características SURF extraídas
         """
-        print("🔍 Extrayendo características SURF...")
+        print("Extrayendo características SURF...")
         
         # Convertir a escala de grises
         if len(imagen.shape) == 3:
@@ -102,7 +102,7 @@ class SURFORBAnalyzer:
             
         except (AttributeError, cv2.error):
             # Fallback si SURF no está disponible
-            print("⚠️  SURF no disponible, usando SIFT como alternativa...")
+            print("SURF no disponible, usando SIFT como alternativa...")
             surf = cv2.SIFT_create(nfeatures=500)
             keypoints, descriptors = surf.detectAndCompute(imagen_gris, None)
             surf_available = False
@@ -110,28 +110,28 @@ class SURFORBAnalyzer:
         # Mostrar información detallada en consola
         if mostrar_descriptores:
             algorithm_name = "SURF" if surf_available else "SIFT"
-            print(f"🌊 ANÁLISIS DE CARACTERÍSTICAS {algorithm_name} - {nombre_imagen.upper()}")
+            print(f"ANÁLISIS DE CARACTERÍSTICAS {algorithm_name} - {nombre_imagen.upper()}")
             print("="*60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
-            print(f"🎯 Número de puntos clave detectados: {len(keypoints)}")
-            print(f"🔧 Algoritmo usado: {algorithm_name}")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Número de puntos clave detectados: {len(keypoints)}")
+            print(f"Algoritmo usado: {algorithm_name}")
             
             if descriptors is not None:
-                print(f"📊 Forma de la matriz de descriptores: {descriptors.shape}")
-                print(f"🔢 Dimensión de cada descriptor: {descriptors.shape[1]} valores")
-                print(f"📈 Total de descriptores: {descriptors.shape[0]}")
+                print(f"Forma de la matriz de descriptores: {descriptors.shape}")
+                print(f"Dimensión de cada descriptor: {descriptors.shape[1]} valores")
+                print(f"Total de descriptores: {descriptors.shape[0]}")
                 
-                print("\n📊 Estadísticas de los descriptores:")
+                print("\nEstadísticas de los descriptores:")
                 print(f"   • Valor mínimo: {np.min(descriptors):.8f}")
                 print(f"   • Valor máximo: {np.max(descriptors):.8f}")
                 print(f"   • Promedio: {np.mean(descriptors):.8f}")
                 print(f"   • Desviación estándar: {np.std(descriptors):.8f}")
                 print(f"   • Energía total: {np.sum(descriptors**2):.6f}")
                 
-                print(f"\n🔍 Información detallada de los primeros 5 puntos clave:")
+                print(f"\nInformación detallada de los primeros 5 puntos clave:")
                 for i in range(min(5, len(keypoints))):
                     kp = keypoints[i]
-                    print(f"   📍 Punto clave {i+1}:")
+                    print(f"   Punto clave {i+1}:")
                     print(f"      • Posición (x,y): ({kp.pt[0]:.2f}, {kp.pt[1]:.2f})")
                     print(f"      • Tamaño: {kp.size:.2f}")
                     print(f"      • Ángulo: {kp.angle:.2f}°")
@@ -140,18 +140,18 @@ class SURFORBAnalyzer:
                     print(f"      • Descriptor (primeros 10 valores): {descriptors[i][:10]}")
                 
                 if len(keypoints) > 0:
-                    print(f"\n🎯 Descriptor completo del primer punto clave:")
+                    print(f"\nDescriptor completo del primer punto clave:")
                     descriptor_str = ', '.join([f"{val:.8f}" for val in descriptors[0]])
                     print(f"   Descriptor 1: [{descriptor_str}]")
                     
                     if len(keypoints) > 1:
-                        print(f"\n🎯 Descriptor completo del último punto clave:")
+                        print(f"\nDescriptor completo del último punto clave:")
                         descriptor_str = ', '.join([f"{val:.8f}" for val in descriptors[-1]])
                         print(f"   Descriptor {len(keypoints)}: [{descriptor_str}]")
                 
-                print(f"\n💾 Para ver todos los {len(keypoints)} descriptores completos, active guardar_resultados=True")
+                print(f"\nPara ver todos los {len(keypoints)} descriptores completos, active guardar_resultados=True")
             else:
-                print("❌ No se pudieron calcular descriptores")
+                print("No se pudieron calcular descriptores")
             
             print("="*60)
         
@@ -247,7 +247,7 @@ class SURFORBAnalyzer:
         Returns:
             dict: Características ORB extraídas
         """
-        print("🔍 Extrayendo características ORB...")
+        print("Extrayendo características ORB...")
         
         # Convertir a escala de grises
         if len(imagen.shape) == 3:
@@ -259,7 +259,7 @@ class SURFORBAnalyzer:
         if usar_metodo_profesora:
             # Configuración exacta de la profesora (por defecto)
             orb = cv2.ORB_create()
-            print("🔧 Usando configuración ORB por defecto (como la profesora)")
+            print("Usando configuración ORB por defecto (como la profesora)")
         else:
             # Configuración avanzada personalizada
             orb = cv2.ORB_create(
@@ -273,34 +273,34 @@ class SURFORBAnalyzer:
                 patchSize=self.orb_config['patchSize'],
                 fastThreshold=self.orb_config['fastThreshold']
             )
-            print("🔧 Usando configuración ORB avanzada personalizada")
+            print("Usando configuración ORB avanzada personalizada")
         
         # Detectar puntos clave y calcular descriptores
         keypoints, descriptors = orb.detectAndCompute(imagen_gris, None)
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"🔑 ANÁLISIS DE CARACTERÍSTICAS ORB - {nombre_imagen.upper()}")
+            print(f"ANÁLISIS DE CARACTERÍSTICAS ORB - {nombre_imagen.upper()}")
             print("="*60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
-            print(f"🎯 Número de puntos clave detectados: {len(keypoints)}")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Número de puntos clave detectados: {len(keypoints)}")
             
             if descriptors is not None:
-                print(f"📊 Forma de la matriz de descriptores: {descriptors.shape}")
-                print(f"🔢 Dimensión de cada descriptor: {descriptors.shape[1]} bytes ({descriptors.shape[1] * 8} bits)")
-                print(f"📈 Total de descriptores: {descriptors.shape[0]}")
+                print(f"Forma de la matriz de descriptores: {descriptors.shape}")
+                print(f"Dimensión de cada descriptor: {descriptors.shape[1]} bytes ({descriptors.shape[1] * 8} bits)")
+                print(f"Total de descriptores: {descriptors.shape[0]}")
                 
-                print("\n📊 Estadísticas de los descriptores (binarios):")
+                print("\nEstadísticas de los descriptores (binarios):")
                 # Convertir a bits para análisis
                 bit_descriptors = np.unpackbits(descriptors, axis=1)
                 print(f"   • Ratio de bits activos promedio: {np.mean(bit_descriptors):.4f}")
                 print(f"   • Total de bits: {bit_descriptors.size}")
                 print(f"   • Bits activos totales: {np.sum(bit_descriptors)}")
                 
-                print(f"\n🔍 Información detallada de los primeros 5 puntos clave:")
+                print(f"\nInformación detallada de los primeros 5 puntos clave:")
                 for i in range(min(5, len(keypoints))):
                     kp = keypoints[i]
-                    print(f"   📍 Punto clave {i+1}:")
+                    print(f"   Punto clave {i+1}:")
                     print(f"      • Posición (x,y): ({kp.pt[0]:.2f}, {kp.pt[1]:.2f})")
                     print(f"      • Tamaño: {kp.size:.2f}")
                     print(f"      • Ángulo: {kp.angle:.2f}°")
@@ -309,22 +309,22 @@ class SURFORBAnalyzer:
                     print(f"      • Descriptor (bits): {bit_descriptors[i]}")
                 
                 if len(keypoints) > 0:
-                    print(f"\n🎯 Descriptor completo del primer punto clave:")
+                    print(f"\nDescriptor completo del primer punto clave:")
                     descriptor_bytes = ', '.join([f"{val}" for val in descriptors[0]])
                     descriptor_bits = ', '.join([f"{val}" for val in bit_descriptors[0]])
                     print(f"   Descriptor 1 (bytes): [{descriptor_bytes}]")
                     print(f"   Descriptor 1 (bits):  [{descriptor_bits}]")
                     
                     if len(keypoints) > 1:
-                        print(f"\n🎯 Descriptor completo del último punto clave:")
+                        print(f"\nDescriptor completo del último punto clave:")
                         descriptor_bytes = ', '.join([f"{val}" for val in descriptors[-1]])
                         descriptor_bits = ', '.join([f"{val}" for val in bit_descriptors[-1]])
                         print(f"   Descriptor {len(keypoints)} (bytes): [{descriptor_bytes}]")
                         print(f"   Descriptor {len(keypoints)} (bits):  [{descriptor_bits}]")
                 
-                print(f"\n💾 Para ver todos los {len(keypoints)} descriptores completos, active guardar_resultados=True")
+                print(f"\nPara ver todos los {len(keypoints)} descriptores completos, active guardar_resultados=True")
             else:
-                print("❌ No se pudieron calcular descriptores")
+                print("No se pudieron calcular descriptores")
             
             print("="*60)
         
@@ -419,7 +419,7 @@ class SURFORBAnalyzer:
             if nombre_imagen is None:
                 nombre_imagen = os.path.basename(imagen_path)
             
-            print(f"🔄 Análisis SURF-ORB para: {nombre_imagen}")
+            print(f"Análisis SURF-ORB para: {nombre_imagen}")
             
             # Análisis SURF
             resultados_surf = self.extraer_caracteristicas_surf(imagen, visualizar=False)
@@ -449,11 +449,11 @@ class SURFORBAnalyzer:
             
             self.current_results.append(resultado_completo)
             
-            print(f"✅ Análisis SURF-ORB completado para: {nombre_imagen}")
+            print(f"Análisis SURF-ORB completado para: {nombre_imagen}")
             return resultado_completo
             
         except Exception as e:
-            print(f"❌ Error al procesar {imagen_path}: {str(e)}")
+            print(f"Error al procesar {imagen_path}: {str(e)}")
             return None
     
     def _analizar_descriptores_surf(self, descriptors):
@@ -755,7 +755,7 @@ class SURFORBAnalyzer:
     def guardar_resultados(self, formato='csv'):
         """Guarda los resultados del análisis."""
         if not self.current_results:
-            print("❌ No hay resultados para guardar.")
+            print("No hay resultados para guardar.")
             return
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -765,7 +765,7 @@ class SURFORBAnalyzer:
             archivo_csv = os.path.join(self.results_dir, f'surf_orb_analysis_{timestamp}.csv')
             os.makedirs(os.path.dirname(archivo_csv), exist_ok=True)
             df.to_csv(archivo_csv, index=False)
-            print(f"💾 Resultados CSV guardados: {archivo_csv}")
+            print(f"Resultados CSV guardados: {archivo_csv}")
         
         elif formato.lower() == 'json':
             import json
@@ -773,23 +773,23 @@ class SURFORBAnalyzer:
             os.makedirs(os.path.dirname(archivo_json), exist_ok=True)
             with open(archivo_json, 'w', encoding='utf-8') as f:
                 json.dump(self.current_results, f, indent=2, ensure_ascii=False, default=str)
-            print(f"💾 Resultados JSON guardados: {archivo_json}")
+            print(f"Resultados JSON guardados: {archivo_json}")
     
     def generar_reporte_surf_orb(self):
         """Genera reporte del análisis SURF-ORB."""
         if not self.current_results:
-            print("❌ No hay resultados para el reporte.")
+            print("No hay resultados para el reporte.")
             return
         
-        print("\n📋 REPORTE ANÁLISIS SURF + ORB")
+        print("\nREPORTE ANÁLISIS SURF + ORB")
         print("=" * 40)
-        print(f"📊 Imágenes analizadas: {len(self.current_results)}")
+        print(f"Imágenes analizadas: {len(self.current_results)}")
         
         # Estadísticas SURF
         surf_keypoints = [r.get('surf_num_keypoints', 0) for r in self.current_results]
         surf_density = [r.get('surf_kp_density', 0) for r in self.current_results]
         
-        print(f"\n🌊 ESTADÍSTICAS SURF:")
+        print(f"\nESTADÍSTICAS SURF:")
         print(f"   Puntos clave promedio: {np.mean(surf_keypoints):.1f}")
         print(f"   Densidad promedio: {np.mean(surf_density):.6f}")
         
@@ -797,13 +797,13 @@ class SURFORBAnalyzer:
         orb_keypoints = [r.get('orb_num_keypoints', 0) for r in self.current_results]
         orb_density = [r.get('orb_kp_density', 0) for r in self.current_results]
         
-        print(f"\n⭕ ESTADÍSTICAS ORB:")
+        print(f"\nESTADÍSTICAS ORB:")
         print(f"   Puntos clave promedio: {np.mean(orb_keypoints):.1f}")
         print(f"   Densidad promedio: {np.mean(orb_density):.6f}")
         
         # Comparación
         ratios = [r.get('keypoint_ratio_surf_orb', 1) for r in self.current_results]
-        print(f"\n⚖️  COMPARACIÓN:")
+        print(f"\nCOMPARACIÓN:")
         print(f"   Ratio SURF/ORB promedio: {np.mean(ratios):.2f}")
         
         # Algoritmo preferido
@@ -844,7 +844,7 @@ class SURFORBAnalyzer:
         df_stats = pd.DataFrame([orb_stats])
         archivo_csv_stats = os.path.join(self.results_dir, f'orb_estadisticas_{nombre_imagen}_{timestamp}.csv')
         df_stats.to_csv(archivo_csv_stats, index=False, encoding='utf-8')
-        print(f"✅ Estadísticas ORB guardadas en: {archivo_csv_stats}")
+        print(f"Estadísticas ORB guardadas en: {archivo_csv_stats}")
         
         # Guardar información de puntos clave en CSV
         if resultados['keypoints']:
@@ -863,7 +863,7 @@ class SURFORBAnalyzer:
             df_keypoints = pd.DataFrame(keypoints_data)
             archivo_csv_keypoints = os.path.join(self.results_dir, f'orb_puntos_clave_{nombre_imagen}_{timestamp}.csv')
             df_keypoints.to_csv(archivo_csv_keypoints, index=False, encoding='utf-8')
-            print(f"✅ Puntos clave ORB guardados en: {archivo_csv_keypoints}")
+            print(f"Puntos clave ORB guardados en: {archivo_csv_keypoints}")
         
         # Guardar descriptores completos en CSV (bytes y bits)
         if resultados['descriptors'] is not None:
@@ -874,7 +874,7 @@ class SURFORBAnalyzer:
             
             archivo_csv_descriptors_bytes = os.path.join(self.results_dir, f'orb_descriptores_bytes_{nombre_imagen}_{timestamp}.csv')
             df_descriptors_bytes.to_csv(archivo_csv_descriptors_bytes, index=False, encoding='utf-8')
-            print(f"✅ Descriptores ORB (bytes) guardados en: {archivo_csv_descriptors_bytes}")
+            print(f"Descriptores ORB (bytes) guardados en: {archivo_csv_descriptors_bytes}")
             
             # Descriptores en bits
             bit_descriptors = np.unpackbits(resultados['descriptors'], axis=1)
@@ -884,7 +884,7 @@ class SURFORBAnalyzer:
             
             archivo_csv_descriptors_bits = os.path.join(self.results_dir, f'orb_descriptores_bits_{nombre_imagen}_{timestamp}.csv')
             df_descriptors_bits.to_csv(archivo_csv_descriptors_bits, index=False, encoding='utf-8')
-            print(f"✅ Descriptores ORB (bits) guardados en: {archivo_csv_descriptors_bits}")
+            print(f"Descriptores ORB (bits) guardados en: {archivo_csv_descriptors_bits}")
         
         # Guardar reporte completo en TXT
         archivo_txt = os.path.join(self.results_dir, f'orb_reporte_completo_{nombre_imagen}_{timestamp}.txt')
@@ -925,9 +925,9 @@ class SURFORBAnalyzer:
                     f.write(f"    [{descriptor_bits_str}]\n")
                 f.write("\n")
         
-        print(f"✅ Reporte ORB completo guardado en: {archivo_txt}")
+        print(f"Reporte ORB completo guardado en: {archivo_txt}")
         archivos_generados = 2 + (1 if resultados['keypoints'] else 0) + (2 if resultados['descriptors'] is not None else 0)
-        print(f"📊 Total de archivos generados: {archivos_generados}")
+        print(f"Total de archivos generados: {archivos_generados}")
     
     def _guardar_resultados_surf(self, resultados, nombre_imagen):
         """Guarda los resultados SURF en archivos CSV y TXT."""
@@ -960,7 +960,7 @@ class SURFORBAnalyzer:
         df_stats = pd.DataFrame([surf_stats])
         archivo_csv_stats = os.path.join(self.results_dir, f'surf_estadisticas_{nombre_imagen}_{timestamp}.csv')
         df_stats.to_csv(archivo_csv_stats, index=False, encoding='utf-8')
-        print(f"✅ Estadísticas SURF guardadas en: {archivo_csv_stats}")
+        print(f"Estadísticas SURF guardadas en: {archivo_csv_stats}")
         
         # Guardar información de puntos clave en CSV
         if resultados['keypoints']:
@@ -979,7 +979,7 @@ class SURFORBAnalyzer:
             df_keypoints = pd.DataFrame(keypoints_data)
             archivo_csv_keypoints = os.path.join(self.results_dir, f'surf_puntos_clave_{nombre_imagen}_{timestamp}.csv')
             df_keypoints.to_csv(archivo_csv_keypoints, index=False, encoding='utf-8')
-            print(f"✅ Puntos clave SURF guardados en: {archivo_csv_keypoints}")
+            print(f"Puntos clave SURF guardados en: {archivo_csv_keypoints}")
         
         # Guardar descriptores completos en CSV
         if resultados['descriptors'] is not None:
@@ -989,7 +989,7 @@ class SURFORBAnalyzer:
             
             archivo_csv_descriptors = os.path.join(self.results_dir, f'surf_descriptores_{nombre_imagen}_{timestamp}.csv')
             df_descriptors.to_csv(archivo_csv_descriptors, index=False, encoding='utf-8')
-            print(f"✅ Descriptores SURF completos guardados en: {archivo_csv_descriptors}")
+            print(f"Descriptores SURF completos guardados en: {archivo_csv_descriptors}")
         
         # Guardar reporte completo en TXT
         archivo_txt = os.path.join(self.results_dir, f'surf_reporte_completo_{nombre_imagen}_{timestamp}.txt')
@@ -1027,9 +1027,9 @@ class SURFORBAnalyzer:
                     f.write(f"    [{descriptor_str}]\n")
                 f.write("\n")
         
-        print(f"✅ Reporte SURF completo guardado en: {archivo_txt}")
+        print(f"Reporte SURF completo guardado en: {archivo_txt}")
         archivos_generados = 2 + (1 if resultados['keypoints'] else 0) + (1 if resultados['descriptors'] is not None else 0)
-        print(f"📊 Total de archivos generados: {archivos_generados}")
+        print(f"Total de archivos generados: {archivos_generados}")
 
 # Función de utilidad
 def analizar_surf_orb_imagen(imagen_path, output_dir="./resultados"):

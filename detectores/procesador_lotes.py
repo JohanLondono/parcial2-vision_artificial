@@ -502,7 +502,7 @@ class ProcesadorLotes:
     
     def mostrar_resumen(self):
         """Muestra resumen del procesamiento en consola."""
-        print(f"\n📊 RESUMEN DEL PROCESAMIENTO")
+        print(f"\nRESUMEN DEL PROCESAMIENTO")
         print("="*50)
         print(f"Tiempo total: {self.estadisticas['tiempo_total']:.2f} segundos")
         print(f"Imágenes procesadas: {self.estadisticas['imagenes_procesadas']}")

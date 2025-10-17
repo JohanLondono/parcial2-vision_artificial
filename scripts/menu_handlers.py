@@ -37,7 +37,7 @@ class AnalysisHandlers:
     def estadisticas_primer_orden(self):
         """Ejecuta análisis de estadísticas de primer orden."""
         try:
-            print("🎨 Analizando estadísticas de primer orden...")
+            print("Analizando estadísticas de primer orden...")
             
             # Usar el analizador de texturas
             resultados = self.sistema.texture_analyzer.estadisticas_primer_orden(
@@ -54,7 +54,7 @@ class AnalysisHandlers:
             self._guardar_resultados_analisis("estadisticas_primer_orden", resultados)
             
         except Exception as e:
-            print(f"❌ Error en análisis de primer orden: {e}")
+            print(f"Error en análisis de primer orden: {e}")
 
     def estadisticas_segundo_orden(self):
         """Ejecuta análisis de estadísticas de segundo orden (GLCM)."""
@@ -81,7 +81,7 @@ class AnalysisHandlers:
     def analisis_texturas_completo(self):
         """Ejecuta análisis completo de texturas con opción de procesamiento por lotes."""
         try:
-            print("🎨 ANÁLISIS COMPLETO DE TEXTURAS")
+            print("ANÁLISIS COMPLETO DE TEXTURAS")
             print("=" * 50)
             print("1. Imagen actual")
             print("2. Procesamiento por lotes")
@@ -139,7 +139,7 @@ class AnalysisHandlers:
                 carpeta = carpeta_predeterminada
             
             if not os.path.exists(carpeta):
-                print(f"❌ La carpeta {carpeta} no existe")
+                print(f"La carpeta {carpeta} no existe")
                 return
             
             # Patrones de archivos
@@ -294,8 +294,8 @@ class AnalysisHandlers:
                 delattr(self.sistema.advanced_analyzer, '_save_visualization')
             
             if resultados:
-                print("✅ Detección LoG completada")
-                print(f"📊 Estadísticas principales:")
+                print("Detección LoG completada")
+                print(f"Estadísticas principales:")
                 print(f"  • Blobs detectados: {resultados.get('log_num_blobs', 0)}")
                 print(f"  • Densidad de blobs: {resultados.get('log_blob_density', 0):.8f}")
                 print(f"  • Consistencia escalas: {resultados.get('log_scale_consistency', 0):.4f}")
@@ -306,14 +306,14 @@ class AnalysisHandlers:
                     print(f"  • Respuesta promedio: {resultados.get('log_mean_response', 0):.6f}")
                 
                 if guardar_resultados:
-                    print(f"💾 Estadísticas guardadas con nombre: {nombre_imagen}")
+                    print(f"Estadísticas guardadas con nombre: {nombre_imagen}")
                 if guardar_imagen:
-                    print(f"🖼️ Imagen de visualización guardada en: {self.sistema.advanced_analyzer.results_dir}")
+                    print(f"Imagen de visualización guardada en: {self.sistema.advanced_analyzer.results_dir}")
             else:
-                print("❌ Error en detección LoG")
+                print("Error en detección LoG")
                 
         except Exception as e:
-            print(f"❌ Error detectando bordes LoG: {e}")
+            print(f"Error detectando bordes LoG: {e}")
 
     def analizar_gradientes(self):
         """Analiza gradientes de la imagen."""
@@ -394,7 +394,7 @@ class AnalysisHandlers:
             print("Comparación de métodos completada")
             
         except Exception as e:
-            print(f"❌ Error comparando métodos: {e}")
+            print(f"Error comparando métodos: {e}")
 
     def detectar_lineas_hough(self):
         """Detecta líneas usando transformada de Hough."""
@@ -445,7 +445,7 @@ class AnalysisHandlers:
                 print("Cálculo de momentos completado")
                 for clave, valor in resultados.items():
                     if isinstance(valor, (int, float)):
-                        print(f"📊 {clave}: {valor:.4f}")
+                        print(f"{clave}: {valor:.4f}")
             else:
                 print("Error calculando momentos")
                 
@@ -477,7 +477,7 @@ class AnalysisHandlers:
     def extraer_surf(self):
         """Extrae características SURF."""
         try:
-            print("\n🌊 ANÁLISIS SURF (Speeded Up Robust Features)")
+            print("\nANÁLISIS SURF (Speeded Up Robust Features)")
             print("="*60)
             print("Opciones de análisis:")
             print("1. ¿Mostrar descriptores detallados en consola? (s/N)")
@@ -497,10 +497,10 @@ class AnalysisHandlers:
                 import os
                 nombre_imagen = os.path.splitext(os.path.basename(self.sistema.ruta_imagen_actual))[0] if self.sistema.ruta_imagen_actual else "imagen_surf"
             
-            print(f"\n🔍 Extrayendo características SURF...")
-            print(f"📊 Descriptores en consola: {'Sí' if mostrar_descriptores else 'No'}")
-            print(f"💾 Guardar archivos: {'Sí' if guardar_resultados else 'No'}")
-            print(f"📄 Nombre: {nombre_imagen}")
+            print(f"\nExtrayendo características SURF...")
+            print(f"Descriptores en consola: {'Sí' if mostrar_descriptores else 'No'}")
+            print(f"Guardar archivos: {'Sí' if guardar_resultados else 'No'}")
+            print(f"Nombre: {nombre_imagen}")
             
             resultados = self.sistema.surf_orb_analyzer.extraer_caracteristicas_surf(
                 self.sistema.imagen_actual, 
@@ -511,28 +511,28 @@ class AnalysisHandlers:
             )
             
             if resultados:
-                print(f"\n✅ Extracción SURF completada")
-                print(f"🎯 Keypoints detectados: {len(resultados.get('keypoints', []))}")
+                print(f"\nExtracción SURF completada")
+                print(f"Keypoints detectados: {len(resultados.get('keypoints', []))}")
                 if resultados.get('descriptors') is not None:
-                    print(f"📏 Dimensión descriptores: {resultados['descriptors'].shape[1]} valores")
+                    print(f"Dimensión descriptores: {resultados['descriptors'].shape[1]} valores")
                 if guardar_resultados:
-                    print(f"💾 Archivos guardados con nombre base: {nombre_imagen}")
+                    print(f"Archivos guardados con nombre base: {nombre_imagen}")
             else:
-                print("❌ Error en extracción SURF")
+                print("Error en extracción SURF")
                 
         except Exception as e:
-            print(f"❌ Error extrayendo SURF: {e}")
+            print(f"Error extrayendo SURF: {e}")
 
     def extraer_orb(self):
         """Extrae características ORB."""
         try:
-            print("\n🔴 ANÁLISIS ORB (Oriented FAST and Rotated BRIEF)")
+            print("\nANÁLISIS ORB (Oriented FAST and Rotated BRIEF)")
             print("="*60)
             print("Opciones de análisis:")
             print("1. ¿Mostrar descriptores detallados en consola? (s/N)")
             print("2. ¿Guardar resultados en archivos CSV y TXT? (s/N)")
             print("3. ¿Método de visualización?")
-            print("   a) Método de la profesora (escala de grises, puntos detallados)")
+            print("   a) Método de la predeterminado (escala de grises, puntos detallados)")
             print("   b) Método personalizado (color, puntos pequeños)")
             print()
             
@@ -544,8 +544,8 @@ class AnalysisHandlers:
             guardar_resultados = guardar_res in ['s', 'sí', 'si', 'y', 'yes']
             
             # Método de visualización
-            metodo = input("¿Método de visualización? (a=profesora, b=personalizado): ").strip().lower()
-            usar_metodo_profesora = metodo in ['a', 'profesora', 'prof']
+            metodo = input("¿Método de visualización? (a=predeterminado, b=personalizado): ").strip().lower()
+            usar_metodo_profesora = metodo in ['a', 'predeterminado', 'prof']
             
             # Nombre de imagen
             nombre_imagen = input("Nombre para archivos (Enter para auto): ").strip()
@@ -553,12 +553,12 @@ class AnalysisHandlers:
                 import os
                 nombre_imagen = os.path.splitext(os.path.basename(self.sistema.ruta_imagen_actual))[0] if self.sistema.ruta_imagen_actual else "imagen_orb"
             
-            metodo_texto = "Profesora (config. por defecto)" if usar_metodo_profesora else "Personalizado (config. avanzada)"
-            print(f"\n🔍 Extrayendo características ORB...")
-            print(f"📊 Descriptores en consola: {'Sí' if mostrar_descriptores else 'No'}")
-            print(f"💾 Guardar archivos: {'Sí' if guardar_resultados else 'No'}")
-            print(f"🎨 Método: {metodo_texto}")
-            print(f"📄 Nombre: {nombre_imagen}")
+            metodo_texto = "Predeterminado (config. por defecto)" if usar_metodo_profesora else "Personalizado (config. avanzada)"
+            print(f"\nExtrayendo características ORB...")
+            print(f"Descriptores en consola: {'Sí' if mostrar_descriptores else 'No'}")
+            print(f"Guardar archivos: {'Sí' if guardar_resultados else 'No'}")
+            print(f"Método: {metodo_texto}")
+            print(f"Nombre: {nombre_imagen}")
             
             resultados = self.sistema.surf_orb_analyzer.extraer_caracteristicas_orb(
                 self.sistema.imagen_actual, 
@@ -570,17 +570,17 @@ class AnalysisHandlers:
             )
             
             if resultados:
-                print(f"\n✅ Extracción ORB completada")
-                print(f"🎯 Keypoints detectados: {len(resultados.get('keypoints', []))}")
+                print(f"\nExtracción ORB completada")
+                print(f"Keypoints detectados: {len(resultados.get('keypoints', []))}")
                 if resultados.get('descriptors') is not None:
-                    print(f"📏 Dimensión descriptores: {resultados['descriptors'].shape[1]} bytes ({resultados['descriptors'].shape[1] * 8} bits)")
+                    print(f"Dimensión descriptores: {resultados['descriptors'].shape[1]} bytes ({resultados['descriptors'].shape[1] * 8} bits)")
                 if guardar_resultados:
-                    print(f"💾 Archivos guardados con nombre base: {nombre_imagen}")
+                    print(f"Archivos guardados con nombre base: {nombre_imagen}")
             else:
-                print("❌ Error en extracción ORB")
+                print("Error en extracción ORB")
                 
         except Exception as e:
-            print(f"❌ Error extrayendo ORB: {e}")
+            print(f"Error extrayendo ORB: {e}")
 
     def extraer_hog(self):
         """Extrae características HOG."""
@@ -588,7 +588,7 @@ class AnalysisHandlers:
             if not self.sistema.verificar_imagen_cargada():
                 return
                 
-            print("\n🎯 Extracción de Características HOG")
+            print("\nExtracción de Características HOG")
             print("="*50)
             
             # Obtener nombre de imagen
@@ -619,15 +619,15 @@ class AnalysisHandlers:
             )
             
             if resultados:
-                print(f"\n✅ Extracción HOG completada para: {nombre_imagen}")
-                print(f"🎯 Características extraídas: {resultados.get('num_features', 0)}")
+                print(f"\nExtracción HOG completada para: {nombre_imagen}")
+                print(f"Características extraídas: {resultados.get('num_features', 0)}")
                 if guardar_resultados:
-                    print(f"💾 Archivos guardados en: {self.sistema.hog_kaze_analyzer.results_dir}")
+                    print(f"Archivos guardados en: {self.sistema.hog_kaze_analyzer.results_dir}")
             else:
-                print("❌ Error en extracción HOG")
+                print("Error en extracción HOG")
                 
         except Exception as e:
-            print(f"❌ Error extrayendo HOG: {e}")
+            print(f"Error extrayendo HOG: {e}")
 
     def extraer_kaze(self):
         """Extrae características KAZE."""
@@ -635,7 +635,7 @@ class AnalysisHandlers:
             if not self.sistema.verificar_imagen_cargada():
                 return
                 
-            print("\n🔑 Extracción de Características KAZE")
+            print("\nExtracción de Características KAZE")
             print("="*50)
             
             # Obtener nombre de imagen
@@ -654,7 +654,7 @@ class AnalysisHandlers:
             opcion = input("\nSeleccione una opción (1-3): ").strip()
             
             print("\nConfiguración KAZE:")
-            print("1. Configuración por defecto (como la profesora)")
+            print("1. Configuración por defecto")
             print("2. Configuración avanzada (más sensible)")
             
             config_opcion = input("\nSeleccione configuración (1-2): ").strip()
@@ -674,17 +674,17 @@ class AnalysisHandlers:
             )
             
             if resultados:
-                print(f"\n✅ Extracción KAZE completada para: {nombre_imagen}")
-                print(f"🔑 Puntos clave detectados: {len(resultados.get('keypoints', []))}")
+                print(f"\nExtracción KAZE completada para: {nombre_imagen}")
+                print(f"Puntos clave detectados: {len(resultados.get('keypoints', []))}")
                 if resultados.get('descriptors') is not None:
-                    print(f"📊 Descriptores generados: {resultados['descriptors'].shape[0]}")
+                    print(f"Descriptores generados: {resultados['descriptors'].shape[0]}")
                 if guardar_resultados:
-                    print(f"💾 Archivos guardados en: {self.sistema.hog_kaze_analyzer.results_dir}")
+                    print(f"Archivos guardados en: {self.sistema.hog_kaze_analyzer.results_dir}")
             else:
-                print("❌ Error en extracción KAZE")
+                print("Error en extracción KAZE")
                 
         except Exception as e:
-            print(f"❌ Error extrayendo KAZE: {e}")
+            print(f"Error extrayendo KAZE: {e}")
     
     def analisis_comparativo_hog_kaze(self):
         """Realiza análisis comparativo HOG + KAZE."""
@@ -692,7 +692,7 @@ class AnalysisHandlers:
             if not self.sistema.verificar_imagen_cargada():
                 return
                 
-            print("\n🔬 Análisis Comparativo HOG + KAZE")
+            print("\nAnálisis Comparativo HOG + KAZE")
             print("="*60)
             
             # Obtener nombre de imagen
@@ -721,14 +721,14 @@ class AnalysisHandlers:
             )
             
             # Mostrar comparación
-            print(f"\n📊 COMPARACIÓN HOG vs KAZE - {nombre_base.upper()}")
+            print(f"\nCOMPARACIÓN HOG vs KAZE - {nombre_base.upper()}")
             print("="*60)
-            print(f"🎯 HOG:")
+            print(f"HOG:")
             print(f"   • Características extraídas: {resultados_hog.get('num_features', 0)}")
             print(f"   • Energía total: {resultados_hog.get('hog_energy', 0):.6f}")
             print(f"   • Entropía: {resultados_hog.get('hog_entropy', 0):.6f}")
             
-            print(f"\n🔑 KAZE:")
+            print(f"\nKAZE:")
             print(f"   • Puntos clave detectados: {len(resultados_kaze.get('keypoints', []))}")
             print(f"   • Densidad de puntos: {resultados_kaze.get('kp_density', 0):.8f}")
             if resultados_kaze.get('descriptors') is not None:
@@ -736,7 +736,7 @@ class AnalysisHandlers:
                 print(f"   • Entropía descriptores: {resultados_kaze.get('descriptor_entropy', 0):.6f}")
             
             # Mostrar visualizaciones
-            print(f"\n🖼️ Generando visualizaciones comparativas...")
+            print(f"\nGenerando visualizaciones comparativas...")
             import matplotlib.pyplot as plt
             
             fig, axes = plt.subplots(2, 2, figsize=(15, 12))
@@ -783,16 +783,16 @@ class AnalysisHandlers:
             plt.tight_layout()
             plt.show()
             
-            print(f"\n✅ Análisis comparativo completado")
-            print(f"💾 Archivos guardados en: {self.sistema.hog_kaze_analyzer.results_dir}")
+            print(f"\nAnálisis comparativo completado")
+            print(f"Archivos guardados en: {self.sistema.hog_kaze_analyzer.results_dir}")
             
         except Exception as e:
-            print(f"❌ Error en análisis comparativo: {e}")
+            print(f"Error en análisis comparativo: {e}")
 
     def extraer_akaze(self):
         """Extrae características AKAZE."""
         try:
-            print("🔍 Extrayendo características AKAZE...")
+            print("Extrayendo características AKAZE...")
             
             # Preguntar si guardar resultados
             guardar = input("¿Guardar resultados en CSV/TXT/imagen? (s/N): ").strip().lower() == 's'
@@ -813,20 +813,20 @@ class AnalysisHandlers:
                 delattr(self.sistema.advanced_analyzer, '_save_visualization')
             
             if resultados:
-                print("✅ Extracción AKAZE completada")
-                print(f"🎯 Keypoints detectados: {len(resultados.get('keypoints', []))}")
+                print("Extracción AKAZE completada")
+                print(f"Keypoints detectados: {len(resultados.get('keypoints', []))}")
                 if guardar:
-                    print(f"💾 Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
+                    print(f"Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
             else:
-                print("❌ Error en extracción AKAZE")
+                print("Error en extracción AKAZE")
                 
         except Exception as e:
-            print(f"❌ Error extrayendo AKAZE: {e}")
+            print(f"Error extrayendo AKAZE: {e}")
 
     def extraer_freak(self):
         """Extrae características FREAK."""
         try:
-            print("🔍 Extrayendo características FREAK...")
+            print("Extrayendo características FREAK...")
             
             # Preguntar si guardar resultados
             guardar = input("¿Guardar resultados en CSV/TXT/imagen? (s/N): ").strip().lower() == 's'
@@ -847,20 +847,20 @@ class AnalysisHandlers:
                 delattr(self.sistema.advanced_analyzer, '_save_visualization')
             
             if resultados:
-                print("✅ Extracción FREAK completada")
-                print(f"🎯 Keypoints detectados: {len(resultados.get('keypoints', []))}")
+                print("Extracción FREAK completada")
+                print(f"Keypoints detectados: {len(resultados.get('keypoints', []))}")
                 if guardar:
-                    print(f"💾 Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
+                    print(f"Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
             else:
-                print("❌ Error en extracción FREAK")
+                print("Error en extracción FREAK")
                 
         except Exception as e:
-            print(f"❌ Error extrayendo FREAK: {e}")
+            print(f"Error extrayendo FREAK: {e}")
 
     def segmentacion_grabcut(self):
         """Ejecuta segmentación GrabCut."""
         try:
-            print("🔍 Ejecutando segmentación GrabCut...")
+            print("Ejecutando segmentación GrabCut...")
             
             # Preguntar si guardar resultados
             guardar = input("¿Guardar resultados en CSV/TXT/imagen? (s/N): ").strip().lower() == 's'
@@ -881,24 +881,24 @@ class AnalysisHandlers:
                 delattr(self.sistema.advanced_analyzer, '_save_visualization')
             
             if resultados:
-                print("✅ Segmentación GrabCut completada")
-                print(f"🎯 Calidad de segmentación: {resultados.get('grabcut_edge_coherence', 0):.3f}")
+                print("Segmentación GrabCut completada")
+                print(f"Calidad de segmentación: {resultados.get('grabcut_edge_coherence', 0):.3f}")
                 if guardar:
-                    print(f"💾 Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
+                    print(f"Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
             else:
-                print("❌ Error en segmentación GrabCut")
+                print("Error en segmentación GrabCut")
                 
         except Exception as e:
-            print(f"❌ Error en GrabCut: {e}")
+            print(f"Error en GrabCut: {e}")
 
     def analisis_optical_flow(self):
         """Analiza optical flow (requiere segunda imagen)."""
         try:
-            print("🔍 Análisis de Optical Flow...")
+            print("Análisis de Optical Flow...")
             print("Se requiere una segunda imagen para comparación")
             
             # Opción de selección de carpeta
-            print("\n📁 Selección de carpeta de imágenes:")
+            print("\nSelección de carpeta de imágenes:")
             print("1. Usar carpeta por defecto (./images)")
             print("2. Especificar ruta personalizada")
             print("3. Cancelar")
@@ -910,26 +910,26 @@ class AnalysisHandlers:
             elif opcion_carpeta == '2':
                 carpeta_personalizada = input("Ingrese la ruta de la carpeta: ").strip()
                 if not carpeta_personalizada or not os.path.exists(carpeta_personalizada):
-                    print("❌ Ruta inválida o carpeta no existe")
+                    print("Ruta inválida o carpeta no existe")
                     return
                 carpeta_imagenes = carpeta_personalizada
             elif opcion_carpeta == '3':
-                print("❌ Análisis cancelado")
+                print("Análisis cancelado")
                 return
             else:
-                print("❌ Opción inválida")
+                print("Opción inválida")
                 return
             
             # Buscar imágenes en la carpeta
             imagenes_disponibles = self._buscar_imagenes_en_carpeta(carpeta_imagenes)
             
             if not imagenes_disponibles:
-                print(f"❌ No se encontraron imágenes en: {carpeta_imagenes}")
+                print(f"No se encontraron imágenes en: {carpeta_imagenes}")
                 print("   Formatos soportados: .jpg, .jpeg, .png, .bmp, .tiff, .tif")
                 return
             
             # Mostrar lista de imágenes
-            print(f"\n📋 Imágenes disponibles en: {carpeta_imagenes}")
+            print(f"\nImágenes disponibles en: {carpeta_imagenes}")
             print("-" * 60)
             for i, (nombre, ruta) in enumerate(imagenes_disponibles, 1):
                 tamaño = self._obtener_info_imagen(ruta)
@@ -939,19 +939,19 @@ class AnalysisHandlers:
             try:
                 seleccion = input(f"\nSeleccione imagen (1-{len(imagenes_disponibles)}) o 'c' para cancelar: ").strip()
                 if seleccion.lower() == 'c':
-                    print("❌ Análisis cancelado")
+                    print("Análisis cancelado")
                     return
                 
                 indice = int(seleccion) - 1
                 if 0 <= indice < len(imagenes_disponibles):
                     nombre_imagen, ruta_segunda = imagenes_disponibles[indice]
-                    print(f"✅ Imagen seleccionada: {nombre_imagen}")
+                    print(f"Imagen seleccionada: {nombre_imagen}")
                 else:
-                    print("❌ Selección inválida")
+                    print("Selección inválida")
                     return
                     
             except ValueError:
-                print("❌ Entrada inválida")
+                print("Entrada inválida")
                 return
             
             # Preguntar si guardar resultados
@@ -962,9 +962,9 @@ class AnalysisHandlers:
                 self.sistema.advanced_analyzer._save_visualization = True
             
             # Ejecutar análisis
-            print(f"\n🔄 Analizando flujo óptico entre imágenes...")
-            print(f"   📷 Imagen 1: {os.path.basename(self.sistema.ruta_imagen_actual or 'imagen_actual')}")
-            print(f"   📷 Imagen 2: {nombre_imagen}")
+            print(f"\nAnalizando flujo óptico entre imágenes...")
+            print(f"Imagen 1: {os.path.basename(self.sistema.ruta_imagen_actual or 'imagen_actual')}")
+            print(f"Imagen 2: {nombre_imagen}")
             
             resultados = self.sistema.advanced_analyzer.analizar_optical_flow(
                 self.sistema.imagen_actual, 
@@ -979,20 +979,20 @@ class AnalysisHandlers:
                 delattr(self.sistema.advanced_analyzer, '_save_visualization')
             
             if resultados:
-                print("✅ Análisis de Optical Flow completado")
-                print(f"📊 Estadísticas principales:")
+                print("Análisis de Optical Flow completado")
+                print(f"Estadísticas principales:")
                 print(f"  • Magnitud promedio: {resultados.get('optical_flow_mean_magnitude', 0):.4f}")
                 print(f"  • Magnitud máxima: {resultados.get('optical_flow_max_magnitude', 0):.4f}")
                 print(f"  • Dirección dominante: {resultados.get('optical_flow_dominant_direction', 0):.0f}°")
                 print(f"  • Coherencia espacial: {resultados.get('optical_flow_spatial_coherence', 0):.4f}")
                 
                 if guardar:
-                    print(f"💾 Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
+                    print(f"Resultados guardados en: {self.sistema.advanced_analyzer.results_dir}")
             else:
-                print("❌ Error en análisis de Optical Flow")
+                print("Error en análisis de Optical Flow")
                 
         except Exception as e:
-            print(f"❌ Error en Optical Flow: {e}")
+            print(f"Error en Optical Flow: {e}")
 
     def _buscar_imagenes_en_carpeta(self, carpeta):
         """Busca imágenes en una carpeta."""
@@ -1012,7 +1012,7 @@ class AnalysisHandlers:
             imagenes.sort(key=lambda x: x[0].lower())
             
         except Exception as e:
-            print(f"❌ Error leyendo carpeta {carpeta}: {e}")
+            print(f"Error leyendo carpeta {carpeta}: {e}")
             
         return imagenes
     
@@ -1197,7 +1197,7 @@ class AnalysisHandlers:
     def extraer_freak(self):
         """Ejecuta extracción de características FREAK."""
         try:
-            print("🔍 Extrayendo características FREAK...")
+            print("Extrayendo características FREAK...")
             
             # Obtener parámetros del usuario
             mostrar_descriptores = input("¿Mostrar descriptores en consola? (s/n): ").lower() == 's'
@@ -1219,15 +1219,15 @@ class AnalysisHandlers:
                 nombre_imagen=nombre_imagen
             )
             
-            print(f"✅ Análisis FREAK completado: {resultados.get('freak_num_keypoints', 0)} puntos detectados")
+            print(f"Análisis FREAK completado: {resultados.get('freak_num_keypoints', 0)} puntos detectados")
             
         except Exception as e:
-            print(f"❌ Error en análisis FREAK: {e}")
+            print(f"Error en análisis FREAK: {e}")
     
     def extraer_akaze_avanzado(self):
         """Ejecuta extracción de características AKAZE avanzado."""
         try:
-            print("🔍 Extrayendo características AKAZE avanzado...")
+            print("Extrayendo características AKAZE avanzado...")
             
             # Obtener parámetros del usuario
             mostrar_descriptores = input("¿Mostrar análisis detallado en consola? (s/n): ").lower() == 's'
@@ -1249,15 +1249,15 @@ class AnalysisHandlers:
                 nombre_imagen=nombre_imagen
             )
             
-            print(f"✅ Análisis AKAZE completado: {resultados.get('akaze_num_keypoints', 0)} puntos detectados")
+            print(f"Análisis AKAZE completado: {resultados.get('akaze_num_keypoints', 0)} puntos detectados")
             
         except Exception as e:
-            print(f"❌ Error en análisis AKAZE: {e}")
+            print(f"Error en análisis AKAZE: {e}")
     
     def analizar_grabcut(self):
         """Ejecuta análisis de segmentación GrabCut."""
         try:
-            print("🔍 Analizando segmentación GrabCut...")
+            print("Analizando segmentación GrabCut...")
             
             # Obtener parámetros del usuario
             mostrar_descriptores = input("¿Mostrar estadísticas detalladas en consola? (s/n): ").lower() == 's'
@@ -1279,15 +1279,15 @@ class AnalysisHandlers:
                 nombre_imagen=nombre_imagen
             )
             
-            print(f"✅ Análisis GrabCut completado: {resultados.get('grabcut_num_regions', 0)} regiones detectadas")
+            print(f"Análisis GrabCut completado: {resultados.get('grabcut_num_regions', 0)} regiones detectadas")
             
         except Exception as e:
-            print(f"❌ Error en análisis GrabCut: {e}")
+            print(f"Error en análisis GrabCut: {e}")
     
     def analizar_log(self):
         """Ejecuta análisis Laplaciano de Gauss (LoG)."""
         try:
-            print("🔍 Analizando con Laplaciano de Gauss (LoG)...")
+            print("Analizando con Laplaciano de Gauss (LoG)...")
             
             # Obtener parámetros del usuario
             mostrar_descriptores = input("¿Mostrar análisis detallado en consola? (s/n): ").lower() == 's'
@@ -1309,15 +1309,15 @@ class AnalysisHandlers:
                 nombre_imagen=nombre_imagen
             )
             
-            print(f"✅ Análisis LoG completado: {resultados.get('log_num_blobs', 0)} blobs detectados")
+            print(f"Análisis LoG completado: {resultados.get('log_num_blobs', 0)} blobs detectados")
             
         except Exception as e:
-            print(f"❌ Error en análisis LoG: {e}")
+            print(f"Error en análisis LoG: {e}")
     
     def analizar_optical_flow(self):
         """Ejecuta análisis de flujo óptico."""
         try:
-            print("🔍 Analizando flujo óptico...")
+            print("Analizando flujo óptico...")
             
             # Preguntar si usar segunda imagen
             usar_segunda = input("¿Usar segunda imagen? (s/n - si no, se creará automáticamente): ").lower() == 's'
@@ -1329,7 +1329,7 @@ class AnalysisHandlers:
                 if self.sistema.imagen_secundaria is not None:
                     imagen2 = self.sistema.imagen_secundaria
                 else:
-                    print("⚠️ No se seleccionó segunda imagen, usando automática")
+                    print("No se seleccionó segunda imagen, usando automática")
             
             # Obtener parámetros del usuario
             mostrar_descriptores = input("¿Mostrar análisis detallado en consola? (s/n): ").lower() == 's'
@@ -1353,15 +1353,15 @@ class AnalysisHandlers:
             )
             
             magnitud_promedio = resultados.get('optical_flow_mean_magnitude', 0)
-            print(f"✅ Análisis Optical Flow completado: magnitud promedio {magnitud_promedio:.6f}")
+            print(f"Análisis Optical Flow completado: magnitud promedio {magnitud_promedio:.6f}")
             
         except Exception as e:
-            print(f"❌ Error en análisis Optical Flow: {e}")
+            print(f"Error en análisis Optical Flow: {e}")
     
     def analisis_avanzado_completo(self):
         """Ejecuta análisis completo con todos los métodos avanzados."""
         try:
-            print("🔍 Ejecutando análisis avanzado completo...")
+            print("Ejecutando análisis avanzado completo...")
             
             # Obtener parámetros del usuario
             guardar_resultados = input("¿Guardar resultados de todos los métodos? (s/n): ").lower() == 's'
@@ -1373,7 +1373,7 @@ class AnalysisHandlers:
             else:
                 nombre_base = "analisis_avanzado_completo"
             
-            print("\n🔍 Ejecutando FREAK...")
+            print("\nEjecutando FREAK...")
             resultados_freak = self.sistema.advanced_analyzer.extraer_caracteristicas_freak(
                 self.sistema.imagen_actual,
                 visualizar=True,
@@ -1382,7 +1382,7 @@ class AnalysisHandlers:
                 nombre_imagen=f"{nombre_base}_freak"
             )
             
-            print("\n🔍 Ejecutando AKAZE...")
+            print("\nEjecutando AKAZE...")
             resultados_akaze = self.sistema.advanced_analyzer.extraer_caracteristicas_akaze(
                 self.sistema.imagen_actual,
                 visualizar=True,
@@ -1391,7 +1391,7 @@ class AnalysisHandlers:
                 nombre_imagen=f"{nombre_base}_akaze"
             )
             
-            print("\n🔍 Ejecutando GrabCut...")
+            print("\nEjecutando GrabCut...")
             resultados_grabcut = self.sistema.advanced_analyzer.analizar_grabcut_segmentation(
                 self.sistema.imagen_actual,
                 visualizar=True,
@@ -1400,7 +1400,7 @@ class AnalysisHandlers:
                 nombre_imagen=f"{nombre_base}_grabcut"
             )
             
-            print("\n🔍 Ejecutando LoG...")
+            print("\nEjecutando LoG...")
             resultados_log = self.sistema.advanced_analyzer.analizar_log_detector(
                 self.sistema.imagen_actual,
                 visualizar=True,
@@ -1409,7 +1409,7 @@ class AnalysisHandlers:
                 nombre_imagen=f"{nombre_base}_log"
             )
             
-            print("\n🔍 Ejecutando Optical Flow...")
+            print("\nEjecutando Optical Flow...")
             resultados_flow = self.sistema.advanced_analyzer.analizar_optical_flow(
                 self.sistema.imagen_actual,
                 imagen2=None,
@@ -1420,7 +1420,7 @@ class AnalysisHandlers:
             )
             
             # Mostrar resumen comparativo
-            print("\n📊 RESUMEN COMPARATIVO MÉTODOS AVANZADOS")
+            print("\nRESUMEN COMPARATIVO MÉTODOS AVANZADOS")
             print("=" * 60)
             print(f"FREAK:       {resultados_freak.get('freak_num_keypoints', 0)} puntos clave")
             print(f"AKAZE:       {resultados_akaze.get('akaze_num_keypoints', 0)} puntos clave")
@@ -1429,15 +1429,15 @@ class AnalysisHandlers:
             print(f"Opt. Flow:   {resultados_flow.get('optical_flow_mean_magnitude', 0):.6f} magnitud promedio")
             print("=" * 60)
             
-            print("✅ Análisis avanzado completo finalizado")
+            print("Análisis avanzado completo finalizado")
             
         except Exception as e:
-            print(f"❌ Error en análisis avanzado completo: {e}")
+            print(f"Error en análisis avanzado completo: {e}")
     
     def extraer_surf(self):
         """Ejecuta extracción de características SURF con puntos amarillos."""
         try:
-            print("🌊 Extrayendo características SURF...")
+            print("Extrayendo características SURF...")
             
             # Obtener parámetros del usuario
             mostrar_descriptores = input("¿Mostrar descriptores en consola? (s/n): ").lower() == 's'
@@ -1460,7 +1460,7 @@ class AnalysisHandlers:
             )
             
             algoritmo_usado = 'SURF' if resultados.get('surf_algorithm_used') == 'SURF' else 'SIFT'
-            print(f"✅ Análisis {algoritmo_usado} completado: {resultados.get('surf_num_keypoints', 0)} puntos detectados")
+            print(f"Análisis {algoritmo_usado} completado: {resultados.get('surf_num_keypoints', 0)} puntos detectados")
             
         except Exception as e:
-            print(f"❌ Error en análisis SURF: {e}")
+            print(f"Error en análisis SURF: {e}")

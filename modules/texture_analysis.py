@@ -234,7 +234,7 @@ class TextureAnalyzer:
             if nombre_imagen is None:
                 nombre_imagen = os.path.basename(imagen_path)
             
-            print(f"🔄 Analizando texturas en: {nombre_imagen}")
+            print(f"Analizando texturas en: {nombre_imagen}")
             
             # Análisis de la imagen completa
             imagen_gris = self.convertir_a_gris(imagen)
@@ -257,11 +257,11 @@ class TextureAnalyzer:
             
             self.current_results.append(resultado_completo)
             
-            print(f"✅ Análisis completado para: {nombre_imagen}")
+            print(f"Análisis completado para: {nombre_imagen}")
             return resultado_completo
             
         except Exception as e:
-            print(f"❌ Error al procesar {imagen_path}: {str(e)}")
+            print(f"Error al procesar {imagen_path}: {str(e)}")
             return None
     
     def procesar_lote_imagenes(self, carpeta_imagenes, patron="*.jpg,*.png,*.tif"):
@@ -286,14 +286,14 @@ class TextureAnalyzer:
             archivos.extend(glob.glob(patron_ruta))
         
         if not archivos:
-            print(f"❌ No se encontraron imágenes en {carpeta_imagenes}")
+            print(f"No se encontraron imágenes en {carpeta_imagenes}")
             return []
         
-        print(f"📁 Procesando {len(archivos)} imágenes...")
+        print(f"Procesando {len(archivos)} imágenes...")
         
         resultados_lote = []
         for i, archivo in enumerate(archivos, 1):
-            print(f"📊 Progreso: {i}/{len(archivos)}")
+            print(f"Progreso: {i}/{len(archivos)}")
             resultado = self.procesar_imagen_completa(archivo)
             if resultado:
                 resultados_lote.append(resultado)
@@ -309,7 +309,7 @@ class TextureAnalyzer:
             formato (str): Formato de salida ('csv', 'json', 'txt')
         """
         if not self.current_results:
-            print("❌ No hay resultados para guardar.")
+            print("No hay resultados para guardar.")
             return
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -321,7 +321,7 @@ class TextureAnalyzer:
         elif formato.lower() == 'txt':
             self._guardar_txt(timestamp)
         else:
-            print(f"❌ Formato no soportado: {formato}")
+            print(f"Formato no soportado: {formato}")
     
     def _guardar_csv(self, timestamp):
         """Guardar resultados en formato CSV."""
@@ -335,7 +335,7 @@ class TextureAnalyzer:
         archivo_csv = os.path.join(self.results_dir, f'texturas_vehicular_{timestamp}.csv')
         os.makedirs(os.path.dirname(archivo_csv), exist_ok=True)
         df.to_csv(archivo_csv, index=False)
-        print(f"💾 Resultados CSV guardados: {archivo_csv}")
+        print(f"Resultados CSV guardados: {archivo_csv}")
     
     def _guardar_json(self, timestamp):
         """Guardar resultados en formato JSON."""
@@ -343,7 +343,7 @@ class TextureAnalyzer:
         archivo_json = os.path.join(self.results_dir, f'texturas_vehicular_{timestamp}.json')
         with open(archivo_json, 'w', encoding='utf-8') as f:
             json.dump(self.current_results, f, indent=2, ensure_ascii=False, default=str)
-        print(f"💾 Resultados JSON guardados: {archivo_json}")
+        print(f"Resultados JSON guardados: {archivo_json}")
     
     def _guardar_txt(self, timestamp):
         """Guardar resultados en formato texto."""
@@ -375,7 +375,7 @@ class TextureAnalyzer:
                 
                 f.write("\n" + "=" * 60 + "\n\n")
         
-        print(f"💾 Resultados TXT guardados: {archivo_txt}")
+        print(f"Resultados TXT guardados: {archivo_txt}")
     
     def visualizar_regiones(self, imagen, regiones):
         """Visualizar las regiones analizadas."""
@@ -413,7 +413,7 @@ class TextureAnalyzer:
             top_n (int): Número de imágenes principales a mostrar
         """
         if not self.current_results:
-            print("❌ No hay resultados para visualizar.")
+            print("No hay resultados para visualizar.")
             return
         
         # Preparar datos para visualización
@@ -499,18 +499,18 @@ class TextureAnalyzer:
         archivo_viz = os.path.join(self.results_dir, 'visualizacion_texturas.png')
         os.makedirs(os.path.dirname(archivo_viz), exist_ok=True)
         plt.savefig(archivo_viz, dpi=300, bbox_inches='tight')
-        print(f"📊 Visualización guardada: {archivo_viz}")
+        print(f"Visualización guardada: {archivo_viz}")
         plt.show()
     
     def generar_reporte_resumen(self):
         """Genera un reporte resumen del análisis."""
         if not self.current_results:
-            print("❌ No hay resultados para el reporte.")
+            print("No hay resultados para el reporte.")
             return
         
-        print("\n📋 REPORTE RESUMEN - ANÁLISIS DE TEXTURAS VEHICULARES")
+        print("\nREPORTE RESUMEN - ANÁLISIS DE TEXTURAS VEHICULARES")
         print("=" * 60)
-        print(f"📊 Total de imágenes analizadas: {len(self.current_results)}")
+        print(f"Total de imágenes analizadas: {len(self.current_results)}")
         
         # Estadísticas generales
         caracteristicas_numericas = []
@@ -520,15 +520,15 @@ class TextureAnalyzer:
             caracteristicas_numericas.extend(valores)
         
         if caracteristicas_numericas:
-            print(f"📈 Rango de valores: {min(caracteristicas_numericas):.3f} - {max(caracteristicas_numericas):.3f}")
-            print(f"📊 Promedio general: {np.mean(caracteristicas_numericas):.3f}")
-            print(f"📊 Desviación estándar: {np.std(caracteristicas_numericas):.3f}")
+            print(f"Rango de valores: {min(caracteristicas_numericas):.3f} - {max(caracteristicas_numericas):.3f}")
+            print(f"Promedio general: {np.mean(caracteristicas_numericas):.3f}")
+            print(f"Desviación estándar: {np.std(caracteristicas_numericas):.3f}")
         
         # Top imágenes por entropía (mayor complejidad de textura)
         imagenes_entropia = [(r['Imagen'], r.get('Entropia', 0)) for r in self.current_results]
         imagenes_entropia.sort(key=lambda x: x[1], reverse=True)
         
-        print(f"\n🏆 TOP 3 - MAYOR COMPLEJIDAD DE TEXTURA (Entropía):")
+        print(f"\nTOP 3 - MAYOR COMPLEJIDAD DE TEXTURA (Entropía):")
         for i, (imagen, entropia) in enumerate(imagenes_entropia[:3], 1):
             print(f"   {i}. {imagen}: {entropia:.4f}")
         
@@ -536,7 +536,7 @@ class TextureAnalyzer:
         imagenes_contraste = [(r['Imagen'], r.get('Contraste', 0)) for r in self.current_results]
         imagenes_contraste.sort(key=lambda x: x[1], reverse=True)
         
-        print(f"\n🎯 TOP 3 - MAYOR CONTRASTE (Variación local):")
+        print(f"\nTOP 3 - MAYOR CONTRASTE (Variación local):")
         for i, (imagen, contraste) in enumerate(imagenes_contraste[:3], 1):
             print(f"   {i}. {imagen}: {contraste:.4f}")
         
@@ -617,13 +617,13 @@ class TextureAnalyzer:
             ruta_salida_csv = os.path.join(self.results_dir, 'resultados_texturas.csv')
             os.makedirs(os.path.dirname(ruta_salida_csv), exist_ok=True)
             df.to_csv(ruta_salida_csv, index=False)
-            print(f"✅ Resultados CSV guardados en {ruta_salida_csv}")
+            print(f"Resultados CSV guardados en {ruta_salida_csv}")
             
             # Guardar resultados en TXT
             ruta_salida_txt = os.path.join(self.results_dir, 'resultados_texturas.txt')
             with open(ruta_salida_txt, 'w', encoding='utf-8') as f:
                 f.write(txt_resultados)
-            print(f"✅ Resultados TXT guardados en {ruta_salida_txt}")
+            print(f"Resultados TXT guardados en {ruta_salida_txt}")
             
             return df
         
@@ -664,7 +664,7 @@ class TextureAnalyzer:
         ruta_grafico = os.path.join(self.results_dir, 'comparacion_texturas.png')
         os.makedirs(os.path.dirname(ruta_grafico), exist_ok=True)
         plt.savefig(ruta_grafico)
-        print(f"✅ Gráfico comparativo guardado en {ruta_grafico}")
+        print(f"Gráfico comparativo guardado en {ruta_grafico}")
         plt.show()
         
         # 3. Matriz de correlación entre todas las características
@@ -687,7 +687,7 @@ class TextureAnalyzer:
         ruta_matriz = os.path.join(self.results_dir, 'matriz_correlacion.png')
         os.makedirs(os.path.dirname(ruta_matriz), exist_ok=True)
         plt.savefig(ruta_matriz)
-        print(f"✅ Matriz de correlación guardada en {ruta_matriz}")
+        print(f"Matriz de correlación guardada en {ruta_matriz}")
         plt.show()
 
 # Función de utilidad para uso directo - imagen individual
@@ -738,10 +738,10 @@ def analizar_carpeta_texturas(carpeta_imagenes, output_dir="./resultados", patro
         analyzer.visualizar_resultados_batch(resultados, carpeta_imagenes)
         
         # Mostrar tabla de resultados en consola
-        print("\n📊 RESULTADOS ESTADÍSTICOS DE TEXTURA:")
+        print("\nRESULTADOS ESTADÍSTICOS DE TEXTURA:")
         print("=" * 80)
         print(resultados)
     else:
-        print("❌ No se pudieron obtener resultados")
+        print("No se pudieron obtener resultados")
     
     return resultados

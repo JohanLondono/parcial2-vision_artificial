@@ -490,13 +490,13 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
         ruta_csv = os.path.join(self.directorio_hough, f'{prefijo}_{timestamp}.csv')
         os.makedirs(os.path.dirname(ruta_csv), exist_ok=True)
         df.to_csv(ruta_csv, index=False)
-        print(f"✅ Resultados CSV guardados: {ruta_csv}")
+        print(f"Resultados CSV guardados: {ruta_csv}")
         
         # Guardar Excel
         ruta_excel = os.path.join(self.directorio_hough, f'{prefijo}_{timestamp}.xlsx')
         os.makedirs(os.path.dirname(ruta_excel), exist_ok=True)
         df.to_excel(ruta_excel, index=False)
-        print(f"✅ Resultados Excel guardados: {ruta_excel}")
+        print(f"Resultados Excel guardados: {ruta_excel}")
         
         # Guardar TXT con formato detallado
         ruta_txt = os.path.join(self.directorio_hough, f'{prefijo}_{timestamp}.txt')
@@ -555,7 +555,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
         with open(ruta_txt, 'w', encoding='utf-8') as f:
             f.write(txt_content)
         
-        print(f"✅ Resultados TXT guardados: {ruta_txt}")
+        print(f"Resultados TXT guardados: {ruta_txt}")
         
         return {
             'csv': ruta_csv,
@@ -646,7 +646,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
         os.makedirs(os.path.dirname(ruta_grafico), exist_ok=True)
         plt.savefig(ruta_grafico, dpi=300, bbox_inches='tight')
         plt.close()
-        print(f"✅ Gráfico comparativo guardado: {ruta_grafico}")
+        print(f"Gráfico comparativo guardado: {ruta_grafico}")
         
         # 2. Matriz de correlación entre características
         plt.figure(figsize=(14, 12))
@@ -677,7 +677,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
             os.makedirs(os.path.dirname(ruta_matriz), exist_ok=True)
             plt.savefig(ruta_matriz, dpi=300, bbox_inches='tight')
             plt.close()
-            print(f"✅ Matriz de correlación guardada: {ruta_matriz}")
+            print(f"Matriz de correlación guardada: {ruta_matriz}")
         
         return ruta_grafico
     
@@ -707,7 +707,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
             print(f"❌ No se encontraron imágenes en {carpeta_imagenes} con el patrón {patron}")
             return None
         
-        print(f"🔍 Encontradas {len(archivos)} imágenes para procesar")
+        print(f"Encontradas {len(archivos)} imágenes para procesar")
         
         # Procesar cada imagen
         resultados = []
@@ -715,12 +715,12 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
         archivos_procesamiento = []
         
         for archivo in archivos:
-            print(f"📸 Procesando {os.path.basename(archivo)}...")
+            print(f"Procesando {os.path.basename(archivo)}...")
             
             # Cargar imagen
             imagen = cv2.imread(archivo)
             if imagen is None:
-                print(f"❌ Error al cargar {archivo}")
+                print(f"Error al cargar {archivo}")
                 continue
             
             # Procesar imagen
@@ -734,7 +734,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
                 archivos_procesamiento.append(ruta_proc)
         
         if not resultados:
-            print("❌ No se pudieron procesar imágenes")
+            print("No se pudieron procesar imágenes")
             return None
         
         # Crear DataFrame con los resultados
@@ -747,7 +747,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
         ruta_comparacion = self.crear_visualizacion_comparativa_lotes(df, "comparacion_hough")
         
         # Mostrar resumen estadístico
-        print("\n📊 RESUMEN ESTADÍSTICO DE LOS RESULTADOS:")
+        print("\nRESUMEN ESTADÍSTICO DE LOS RESULTADOS:")
         print("=" * 60)
         print(f"Número de imágenes procesadas: {len(resultados)}")
         print(f"Promedio de líneas detectadas: {df['num_lineas_detectadas'].mean():.2f}")
@@ -767,7 +767,7 @@ Suma Hough (líneas): {np.sum(h_lineas):.0f}
         if guardar_procesamiento_individual:
             resultado_final['procesamiento_individual'] = archivos_procesamiento
         
-        print(f"\n✅ Procesamiento por lotes completado exitosamente")
-        print(f"📁 Resultados guardados en: {self.directorio_hough}")
+        print(f"\nProcesamiento por lotes completado exitosamente")
+        print(f"Resultados guardados en: {self.directorio_hough}")
         
         return resultado_final

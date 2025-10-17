@@ -43,13 +43,13 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # Importar detectores
 from detectores.detector_llantas import DetectorLlantas, detectar_llantas_imagen
 from detectores.detector_senales import DetectorSenales, detectar_senales_imagen
-from detectores.detector_semaforos import DetectorSemaforos, detectar_semaforos_imagen
+from detectores.detector_semaforos_nuevo import DetectorSemaforos, detectar_semaforos_imagen
 from detectores.procesador_lotes import ProcesadorLotes, procesar_carpeta_imagenes
 
-# Importar extensiones de métodos múltiples
-from scripts.extensiones_multiples_llantas import agregar_metodos_multiples_llantas
-from scripts.extensiones_multiples_senales import agregar_metodos_multiples_senales
-from scripts.extensiones_multiples_semaforos import agregar_metodos_multiples_semaforos
+# Importar extensiones de métodos múltiples corregidas
+from scripts.extensiones_multiples_llantas_corregido import agregar_metodos_multiples_llantas
+from scripts.extensiones_multiples_senales_corregido import agregar_metodos_multiples_senales
+from scripts.extensiones_multiples_semaforos_corregido import agregar_metodos_multiples_semaforos
 from scripts.extensiones_procesamiento_lotes import agregar_procesamiento_multiples_metodos
 
 # Importar módulos de análisis
@@ -282,7 +282,7 @@ class SistemaDeteccionVehicular:
         print("6. FREAK (Fast Retina Keypoint)")
         print("7. GrabCut Segmentation")
         print("8. Optical Flow (Método Original)")
-        print("9. Optical Flow (Método de la Profesora)")
+        print("9. Optical Flow (Método Predeterminado)")
         print("10. Análisis de Secuencias en Carpeta")
         print("11. Análisis Comparativo HOG + KAZE")
         print("12. Análisis Combinado Avanzado")
@@ -654,28 +654,30 @@ class SistemaDeteccionVehicular:
         if not self.verificar_imagen_cargada():
             return
         
-        self.mostrar_menu_metodos("llantas")
-        opcion = input("\nSeleccione método: ").strip()
+        print("\nConfiguración de detección de llantas:")
+        print("1. CONFIG_PRECISION_ALTA - Hough multiescala + Contornos + Color + AKAZE")
+        print("2. CONFIG_ROBUSTA - Contornos circulares + Textura + Color + Validación geométrica")
+        print("3. CONFIG_ADAPTATIVA - Hough adaptativo + Análisis textural + Color multirrango")
+        print("4. CONFIG_BALANCED - Combinación equilibrada (recomendada)")
+        print("5. Ejecutar TODAS las configuraciones")
+        print("0. Volver al menú anterior")
         
-        metodos = {
-            '1': 'hough',
-            '2': 'akaze', 
-            '3': 'textura',
-            '4': 'combinado',
-            '5': 'todos'
+        opcion = input("\nSeleccione configuración: ").strip()
+        
+        configuraciones = {
+            '1': 'CONFIG_PRECISION_ALTA',
+            '2': 'CONFIG_ROBUSTA', 
+            '3': 'CONFIG_ADAPTATIVA',
+            '4': 'CONFIG_BALANCED'
         }
         
         if opcion == '0':
             return
         
-        metodo = metodos.get(opcion, 'combinado')
-        
-        print(f"\nDetectando llantas con método: {metodo}")
-        
-        try:
-            if metodo == 'todos':
-                # Ejecutar TODOS los métodos
-                print("Ejecutando TODOS los métodos de detección de llantas...")
+        if opcion == '5':
+            # Ejecutar TODAS las configuraciones
+            print("Ejecutando TODAS las configuraciones de detección de llantas...")
+            try:
                 resultado = self.detector_llantas.detectar_llantas_todos_metodos(
                     self.imagen_actual, visualizar=True, guardar=True,
                     ruta_base=self.directorio_resultados
@@ -684,143 +686,189 @@ class SistemaDeteccionVehicular:
                 if resultado:
                     print(f"\nAnálisis completo terminado:")
                     total_detecciones = 0
-                    for met, res in resultado.items():
+                    for config, res in resultado.items():
                         if 'error' not in res:
                             num = len(res.get('llantas_detectadas', []))
                             total_detecciones += num
                             tiempo = res.get('tiempo_ejecucion', 0)
-                            print(f"   {met.upper()}: {num} llantas ({tiempo:.3f}s)")
+                            confianza = res.get('confianza_promedio', 0)
+                            print(f"   {config}: {num} llantas (tiempo: {tiempo:.3f}s, confianza: {confianza:.3f})")
                         else:
-                            print(f"   {met.upper()}: ERROR - {res.get('error', 'Desconocido')}")
+                            print(f"   {config}: ERROR - {res.get('error', 'Desconocido')}")
                     
-                    print(f"Total combinado: {total_detecciones} detecciones")
+                    print(f"Total de detecciones: {total_detecciones}")
                     print(f"Reportes guardados en: {self.directorio_resultados}/reportes/")
                 else:
                     print("Error en el análisis completo")
-            else:
-                # Ejecutar método individual
+            except Exception as e:
+                print(f"Error durante el análisis completo: {e}")
+        else:
+            # Ejecutar configuración individual
+            configuracion = configuraciones.get(opcion, 'CONFIG_BALANCED')
+            print(f"\nDetectando llantas con configuración: {configuracion}")
+            
+            try:
                 resultado = self.detector_llantas.detectar_llantas(
-                    self.imagen_actual, metodo=metodo, visualizar=True,
+                    self.imagen_actual, configuracion=configuracion, visualizar=True,
                     guardar=True, ruta_salida=os.path.join(self.directorio_resultados, "llantas")
                 )
                 
                 if resultado:
                     print(f"\nDetección completada:")
-                    print(f"   Método: {resultado['metodo']}")
+                    print(f"   Configuración: {resultado['configuracion']}")
                     print(f"   Llantas detectadas: {resultado['num_llantas']}")
-                    print(f"   Confianza: {resultado.get('confianza_promedio', 0):.3f}")
+                    print(f"   Candidatos iniciales: {resultado['candidatos_iniciales']}")
+                    print(f"   Confianza promedio: {resultado['confianza_promedio']:.3f}")
                 else:
                     print("Error en la detección")
-                
-        except Exception as e:
-            print(f"Error durante la detección: {e}")
+                    
+            except Exception as e:
+                print(f"Error durante la detección: {e}")
     
     def detectar_senales(self):
-        """Ejecuta detección de señales de tráfico."""
+        """Ejecuta detección de señales de tráfico con selección de forma."""
         if not self.verificar_imagen_cargada():
             return
         
-        self.mostrar_menu_metodos("señales")
-        opcion = input("\nSeleccione método: ").strip()
+        # Primero seleccionar forma
+        print("\nSelección de forma de señal:")
+        print("1. CIRCULAR - Señales circulares (prohibición, obligación)")
+        print("2. RECTANGULAR - Señales rectangulares (informativas)")
+        print("3. TRIANGULAR - Señales triangulares (advertencia)")
+        print("4. OCTAGONAL - Señales octagonales (STOP)")
+        print("5. TODAS - Todas las formas")
+        print("0. Volver al menú anterior")
         
-        metodos = {
-            '1': 'hough',
-            '2': 'freak',
-            '3': 'color',
-            '4': 'log',
-            '5': 'combinado',
-            '6': 'todos'
+        opcion_forma = input("\nSeleccione forma: ").strip()
+        
+        if opcion_forma == '0':
+            return
+        elif opcion_forma not in ['1', '2', '3', '4', '5']:
+            print("Opción no válida")
+            return
+        
+        # Mapeo de opciones a formas
+        formas = {
+            '1': 'CIRCULAR',
+            '2': 'RECTANGULAR',
+            '3': 'TRIANGULAR',
+            '4': 'OCTAGONAL',
+            '5': 'TODAS'
+        }
+        
+        forma_elegida = formas[opcion_forma]
+        
+        print(f"\nConfiguración de detección de señales {forma_elegida.lower()}:")
+        print("1. CONFIG_PRECISION_ALTA - Hough multiescala + Color HSV + Validación morfológica")
+        print("2. CONFIG_ROBUSTA - Contornos + Color + Validación geométrica")
+        print("3. CONFIG_ADAPTATIVA - Hough adaptativo + Análisis textural + Color multirrango")
+        print("4. CONFIG_BALANCED - Combinación equilibrada (recomendada)")
+        print("5. Ejecutar TODAS las configuraciones")
+        print("0. Volver al menú anterior")
+        
+        opcion = input("\nSeleccione configuración: ").strip()
+        
+        configuraciones = {
+            '1': 'CONFIG_PRECISION_ALTA',
+            '2': 'CONFIG_ROBUSTA',
+            '3': 'CONFIG_ADAPTATIVA',
+            '4': 'CONFIG_BALANCED'
         }
         
         if opcion == '0':
             return
         
-        metodo = metodos.get(opcion, 'combinado')
-        
-        print(f"\nDetectando señales con método: {metodo}")
-        
-        try:
-            if metodo == 'todos':
-                # Ejecutar TODOS los métodos
-                print("Ejecutando TODOS los métodos de detección de señales...")
+        if opcion == '5':
+            # Ejecutar TODAS las configuraciones
+            print(f"Ejecutando TODAS las configuraciones de detección de señales {forma_elegida.lower()}...")
+            try:
                 resultado = self.detector_senales.detectar_senales_todos_metodos(
-                    self.imagen_actual, visualizar=True, guardar=True,
+                    self.imagen_actual, forma=forma_elegida, visualizar=True, guardar=True,
                     ruta_base=self.directorio_resultados
                 )
                 
                 if resultado:
                     print(f"\nAnálisis completo terminado:")
                     total_detecciones = 0
-                    for met, res in resultado.items():
+                    for config, res in resultado.items():
                         if 'error' not in res:
                             num = len(res.get('senales_detectadas', []))
                             total_detecciones += num
                             tiempo = res.get('tiempo_ejecucion', 0)
-                            print(f"   {met.upper()}: {num} señales ({tiempo:.3f}s)")
+                            confianza = res.get('confianza_promedio', 0)
+                            print(f"   {config}: {num} señales (tiempo: {tiempo:.3f}s, confianza: {confianza:.3f})")
                         else:
-                            print(f"   {met.upper()}: ERROR - {res.get('error', 'Desconocido')}")
+                            print(f"   {config}: ERROR - {res.get('error', 'Desconocido')}")
                     
-                    print(f"Total combinado: {total_detecciones} detecciones")
+                    print(f"Total de detecciones: {total_detecciones}")
                     print(f"Reportes guardados en: {self.directorio_resultados}/reportes/")
                 else:
                     print("Error en el análisis completo")
-            else:
-                # Ejecutar método individual
+            except Exception as e:
+                print(f"Error durante el análisis completo: {e}")
+        else:
+            # Ejecutar configuración individual
+            configuracion = configuraciones.get(opcion, 'CONFIG_BALANCED')
+            print(f"\nDetectando señales {forma_elegida.lower()} con configuración: {configuracion}")
+            
+            try:
                 resultado = self.detector_senales.detectar_senales(
-                    self.imagen_actual, metodo=metodo, visualizar=True,
-                    guardar=True, ruta_salida=os.path.join(self.directorio_resultados, "senales")
+                    self.imagen_actual, configuracion=configuracion, forma=forma_elegida,
+                    visualizar=True, guardar=True, 
+                    ruta_salida=os.path.join(self.directorio_resultados, "senales")
                 )
                 
                 if resultado:
                     print(f"\nDetección completada:")
-                    print(f"   Método: {resultado['metodo']}")
+                    print(f"   Forma: {forma_elegida}")
+                    print(f"   Configuración: {resultado['configuracion']}")
                     print(f"   Señales detectadas: {resultado['num_senales']}")
-                    print(f"   Confianza: {resultado.get('confianza_promedio', 0):.3f}")
+                    print(f"   Confianza promedio: {resultado['confianza_promedio']:.3f}")
+                    print(f"   Candidatos por forma: {resultado.get('candidatos_forma', 0)}")
+                    print(f"   Candidatos Hough: {resultado.get('candidatos_hough', 0)}")
+                    print(f"   Candidatos contornos: {resultado.get('candidatos_contornos', 0)}")
                     
-                    # Mostrar tipos de señales detectadas
-                    if resultado['senales']:
-                        tipos = {}
-                        for senal in resultado['senales']:
-                            tipo = senal[3] if len(senal) > 3 else 'Desconocida'
-                            tipos[tipo] = tipos.get(tipo, 0) + 1
-                        
-                        print("   Tipos detectados:")
-                        for tipo, cantidad in tipos.items():
-                            print(f"     - {tipo}: {cantidad}")
+                    # Mostrar estadísticas por tipo si están disponibles
+                    if 'estadisticas' in resultado and 'por_tipo' in resultado['estadisticas']:
+                        print("   Estadísticas por tipo:")
+                        for tipo, cantidad in resultado['estadisticas']['por_tipo'].items():
+                            if cantidad > 0:
+                                print(f"     - {tipo}: {cantidad} detecciones")
                 else:
                     print("Error en la detección")
-                
-        except Exception as e:
-            print(f"Error durante la detección: {e}")
+                    
+            except Exception as e:
+                print(f"Error durante la detección: {e}")
     
     def detectar_semaforos(self):
         """Ejecuta detección de semáforos."""
         if not self.verificar_imagen_cargada():
             return
         
-        self.mostrar_menu_metodos("semáforos")
-        opcion = input("\nSeleccione método: ").strip()
+        print("\nConfiguración de detección de semáforos:")
+        print("1. CONFIG_PRECISION_ALTA - Color HSV + Estructura + Morfología + Validación")
+        print("2. CONFIG_ROBUSTA - Contornos + Color + GrabCut + Validación geométrica")
+        print("3. CONFIG_ADAPTATIVA - Color multirrango + Textura + Hough + AKAZE")
+        print("4. CONFIG_BALANCED - Combinación equilibrada (recomendada)")
+        print("5. Ejecutar TODAS las configuraciones")
+        print("0. Volver al menú anterior")
         
-        metodos = {
-            '1': 'color',
-            '2': 'estructura',
-            '3': 'grabcut',
-            '4': 'combinado',
-            '5': 'multialgoritmo',
-            '6': 'todos'
+        opcion = input("\nSeleccione configuración: ").strip()
+        
+        configuraciones = {
+            '1': 'CONFIG_PRECISION_ALTA',
+            '2': 'CONFIG_ROBUSTA',
+            '3': 'CONFIG_ADAPTATIVA',
+            '4': 'CONFIG_BALANCED'
         }
         
         if opcion == '0':
             return
         
-        metodo = metodos.get(opcion, 'combinado')
-        
-        print(f"\nDetectando semáforos con método: {metodo}")
-        
-        try:
-            if metodo == 'todos':
-                # Ejecutar TODOS los métodos
-                print("Ejecutando TODOS los métodos de detección de semáforos...")
+        if opcion == '5':
+            # Ejecutar TODAS las configuraciones
+            print("Ejecutando TODAS las configuraciones de detección de semáforos...")
+            try:
                 resultado = self.detector_semaforos.detectar_semaforos_todos_metodos(
                     self.imagen_actual, visualizar=True, guardar=True,
                     ruta_base=self.directorio_resultados
@@ -829,46 +877,52 @@ class SistemaDeteccionVehicular:
                 if resultado:
                     print(f"\nAnálisis completo terminado:")
                     total_detecciones = 0
-                    for met, res in resultado.items():
+                    for config, res in resultado.items():
                         if 'error' not in res:
                             num = len(res.get('semaforos_detectados', []))
                             total_detecciones += num
                             tiempo = res.get('tiempo_ejecucion', 0)
-                            print(f"   {met.upper()}: {num} semáforos ({tiempo:.3f}s)")
+                            confianza = res.get('confianza_promedio', 0)
+                            print(f"   {config}: {num} semáforos (tiempo: {tiempo:.3f}s, confianza: {confianza:.3f})")
                         else:
-                            print(f"   {met.upper()}: ERROR - {res.get('error', 'Desconocido')}")
+                            print(f"   {config}: ERROR - {res.get('error', 'Desconocido')}")
                     
-                    print(f"Total combinado: {total_detecciones} detecciones")
+                    print(f"Total de detecciones: {total_detecciones}")
                     print(f"Reportes guardados en: {self.directorio_resultados}/reportes/")
                 else:
                     print("Error en el análisis completo")
-            else:
-                # Ejecutar método individual
+            except Exception as e:
+                print(f"Error durante el análisis completo: {e}")
+        else:
+            # Ejecutar configuración individual
+            configuracion = configuraciones.get(opcion, 'CONFIG_BALANCED')
+            print(f"\nDetectando semáforos con configuración: {configuracion}")
+            
+            try:
                 resultado = self.detector_semaforos.detectar_semaforos(
-                    self.imagen_actual, metodo=metodo, visualizar=True,
+                    self.imagen_actual, configuracion=configuracion, visualizar=True,
                     guardar=True, ruta_salida=os.path.join(self.directorio_resultados, "semaforos")
                 )
                 
                 if resultado:
                     print(f"\nDetección completada:")
-                    print(f"   Método: {resultado['metodo']}")
+                    print(f"   Configuración: {resultado['configuracion']}")
                     print(f"   Semáforos detectados: {resultado['num_semaforos']}")
-                    print(f"   Confianza: {resultado.get('confianza_promedio', 0):.3f}")
+                    print(f"   Candidatos iniciales: {resultado['candidatos_iniciales']}")
+                    print(f"   Confianza promedio: {resultado['confianza_promedio']:.3f}")
                     
-                    # Mostrar detalles de semáforos
-                    if resultado['semaforos']:
-                        for i, semaforo in enumerate(resultado['semaforos'], 1):
-                            info = f"   Semáforo {i}:"
-                            if 'num_luces' in semaforo:
-                                info += f" {semaforo['num_luces']} luces"
-                            if 'colores_detectados' in semaforo:
-                                info += f", colores: {', '.join(semaforo['colores_detectados'])}"
-                            print(info)
+                    # Mostrar detalles de semáforos detectados
+                    if resultado.get('semaforos_detectados'):
+                        print("   Detalles de detección:")
+                        for i, semaforo in enumerate(resultado['semaforos_detectados'], 1):
+                            print(f"     Semáforo {i}: Centro({semaforo[0]}, {semaforo[1]}), Tamaño({semaforo[2]}x{semaforo[3]})")
+                            if len(semaforo) > 4:
+                                print(f"       Color: {semaforo[4]}, Confianza: {semaforo[5]:.3f}")
                 else:
                     print("Error en la detección")
-                
-        except Exception as e:
-            print(f"Error durante la detección: {e}")
+                    
+            except Exception as e:
+                print(f"Error durante la detección: {e}")
     
     def deteccion_completa(self):
         """Ejecuta detección de todos los tipos de objetos."""
@@ -1241,7 +1295,7 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "texture_analysis", f"batch_{nombre_imagen}_momentos.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_momentos)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 resultado = {
                     'momentos_espaciales': momentos,
@@ -1253,13 +1307,13 @@ class SistemaDeteccionVehicular:
                     'output_path': output_path
                 }
                 resultados_totales.append(resultado)
-                print(f"✅ {nombre_imagen} completado")
+                print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("momentos", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis de momentos completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis de momentos completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_hough(self):
         """Procesamiento por lotes para Transformada de Hough."""
@@ -1278,17 +1332,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("Transformada de Hough", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis de Hough en lote...")
+        print("Iniciando análisis de Hough en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis completo de Hough
@@ -1303,13 +1357,13 @@ class SistemaDeteccionVehicular:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("hough", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis de Hough completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis de Hough completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_hog(self):
         """Procesamiento por lotes para HOG únicamente."""
@@ -1328,17 +1382,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("HOG", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis HOG en lote...")
+        print("Iniciando análisis HOG en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis HOG sin visualización para lotes
@@ -1395,20 +1449,20 @@ class SistemaDeteccionVehicular:
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 plt.savefig(output_path, dpi=300, bbox_inches='tight')
                 plt.close()  # Cerrar para evitar acumulación de memoria
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultado['output_path'] = output_path
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("hog", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis HOG completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis HOG completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_kaze(self):
         """Procesamiento por lotes para KAZE únicamente."""
@@ -1427,7 +1481,7 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("KAZE", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis KAZE en lote...")
+        print("Iniciando análisis KAZE en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
@@ -1437,7 +1491,7 @@ class SistemaDeteccionVehicular:
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis KAZE
@@ -1462,7 +1516,7 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "hog_kaze_analysis", f"batch_{nombre_imagen}_kaze.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
@@ -1472,10 +1526,10 @@ class SistemaDeteccionVehicular:
                     print(f"✅ {nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("kaze", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis KAZE completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis KAZE completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_surf(self):
         """Procesamiento por lotes para SURF únicamente."""
@@ -1494,17 +1548,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("SURF", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis SURF en lote...")
+        print("Iniciando análisis SURF en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis SURF
@@ -1529,20 +1583,20 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "surf_orb_analysis", f"batch_{nombre_imagen}_surf.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultado['output_path'] = output_path
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("surf", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis SURF completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis SURF completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_orb(self):
         """Procesamiento por lotes para ORB únicamente."""
@@ -1561,17 +1615,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("ORB", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis ORB en lote...")
+        print("Iniciando análisis ORB en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis ORB
@@ -1596,20 +1650,20 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "surf_orb_analysis", f"batch_{nombre_imagen}_orb.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultado['output_path'] = output_path
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("orb", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis ORB completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis ORB completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
 
     def _procesamiento_hog_kaze(self):
         """Procesamiento por lotes para HOG + KAZE."""
@@ -1628,17 +1682,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("HOG + KAZE", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis HOG + KAZE en lote...")
+        print("Iniciando análisis HOG + KAZE en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis HOG
@@ -1673,7 +1727,7 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "hog_kaze_analysis", f"batch_{nombre_imagen}_hog_kaze.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado_hog and resultado_kaze:
                     resultado_combinado = {
@@ -1684,13 +1738,13 @@ class SistemaDeteccionVehicular:
                         'output_path': output_path
                     }
                     resultados_totales.append(resultado_combinado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("hog_kaze", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis HOG + KAZE completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis HOG + KAZE completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_surf_orb(self):
         """Procesamiento por lotes para SURF + ORB."""
@@ -1709,17 +1763,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("SURF + ORB", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis SURF + ORB en lote...")
+        print("Iniciando análisis SURF + ORB en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis SURF
@@ -1761,7 +1815,7 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "surf_orb_analysis", f"batch_{nombre_imagen}_surf_orb.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado_surf and resultado_orb:
                     resultado_combinado = {
@@ -1772,13 +1826,13 @@ class SistemaDeteccionVehicular:
                         'output_path': output_path
                     }
                     resultados_totales.append(resultado_combinado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("surf_orb", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis SURF + ORB completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis SURF + ORB completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_freak(self):
         """Procesamiento por lotes para FREAK."""
@@ -1797,17 +1851,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("FREAK", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis FREAK en lote...")
+        print("Iniciando análisis FREAK en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis FREAK
@@ -1832,20 +1886,20 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "advanced_analysis", f"batch_{nombre_imagen}_freak.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultado['output_path'] = output_path
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
                 print(f"❌ Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("freak", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis FREAK completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis FREAK completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_akaze(self):
         """Procesamiento por lotes para AKAZE."""
@@ -1864,17 +1918,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("AKAZE", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis AKAZE en lote...")
+        print("Iniciando análisis AKAZE en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis AKAZE
@@ -1899,20 +1953,20 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "advanced_analysis", f"batch_{nombre_imagen}_akaze.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, imagen_procesada)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultado['output_path'] = output_path
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("akaze", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis AKAZE completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis AKAZE completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_grabcut(self):
         """Procesamiento por lotes para GrabCut."""
@@ -1931,17 +1985,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("GrabCut Segmentación", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis GrabCut en lote...")
+        print("Iniciando análisis GrabCut en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis GrabCut
@@ -1964,11 +2018,11 @@ class SistemaDeteccionVehicular:
                     imagen_segmentada = imagen.copy()
                     imagen_segmentada[mask == 0] = [0, 0, 0]  # Fondo negro
                     cv2.imwrite(output_path, imagen_segmentada)
-                    print(f"💾 Imagen guardada: {output_path}")
+                    print(f"Imagen guardada: {output_path}")
                 else:
                     # Si no hay máscara, guardar imagen original
                     cv2.imwrite(output_path, imagen)
-                    print(f"💾 Imagen guardada: {output_path}")
+                    print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
@@ -1978,10 +2032,10 @@ class SistemaDeteccionVehicular:
                     print(f"✅ {nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("grabcut", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis GrabCut completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis GrabCut completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_log(self):
         """Procesamiento por lotes para Laplaciano de Gauss."""
@@ -2000,17 +2054,17 @@ class SistemaDeteccionVehicular:
         if not self._confirmar_procesamiento("Laplaciano de Gauss", len(imagenes), carpeta):
             return
             
-        print("🔍 Iniciando análisis LoG en lote...")
+        print("Iniciando análisis LoG en lote...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"\n📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
                 if imagen is None:
-                    print(f"❌ Error cargando imagen: {ruta_imagen}")
+                    print(f"Error cargando imagen: {ruta_imagen}")
                     continue
                     
                 # Análisis LoG
@@ -2037,20 +2091,20 @@ class SistemaDeteccionVehicular:
                 output_path = os.path.join(self.directorio_resultados, "advanced_analysis", f"batch_{nombre_imagen}_log.png")
                 os.makedirs(os.path.dirname(output_path), exist_ok=True)
                 cv2.imwrite(output_path, log_colored)
-                print(f"💾 Imagen guardada: {output_path}")
+                print(f"Imagen guardada: {output_path}")
                 
                 if resultado:
                     resultado['imagen_path'] = ruta_imagen
                     resultado['imagen_nombre'] = nombre_imagen
                     resultado['output_path'] = output_path
                     resultados_totales.append(resultado)
-                    print(f"✅ {nombre_imagen} completado")
+                    print(f"{nombre_imagen} completado")
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("log", resultados_totales, carpeta)
-        print(f"\n🎯 Análisis LoG completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
+        print(f"\nAnálisis LoG completado: {len(resultados_totales)}/{len(imagenes)} imágenes procesadas")
     
     def _procesamiento_todos_metodos(self):
         """Procesamiento por lotes con TODOS los métodos de características."""
@@ -2068,7 +2122,7 @@ class SistemaDeteccionVehicular:
             print(f"No se encontraron imágenes en: {carpeta}")
             return
             
-        print(f"\n⚠️  ADVERTENCIA: Análisis masivo de {len(imagenes)} imágenes con 11 métodos diferentes")
+        print(f"\nADVERTENCIA: Análisis masivo de {len(imagenes)} imágenes con 11 métodos diferentes")
         print(f"   Tiempo estimado: {len(imagenes) * 3} - {len(imagenes) * 7} minutos")
         print(f"   Se generará UN archivo consolidado (CSV + TXT) por cada método")
         
@@ -2076,7 +2130,7 @@ class SistemaDeteccionVehicular:
         if confirmar not in ['s', 'si', 'sí', 'y', 'yes']:
             return
             
-        print("🚀 Iniciando análisis masivo...")
+        print("Iniciando análisis masivo...")
         
         # Guardar carpeta original para restaurar después
         carpeta_original = self.directorio_imagenes
@@ -2102,24 +2156,24 @@ class SistemaDeteccionVehicular:
             
             for nombre_metodo, metodo in metodos:
                 print(f"\n{'='*60}")
-                print(f"🔍 EJECUTANDO: {nombre_metodo}")
+                print(f"EJECUTANDO: {nombre_metodo}")
                 print(f"{'='*60}")
                 
                 try:
                     metodo()  # Ejecutar el método individual
                     metodos_ejecutados.append(nombre_metodo)
-                    print(f"✅ {nombre_metodo} completado")
+                    print(f"{nombre_metodo} completado")
                 except Exception as e:
-                    print(f"❌ Error en {nombre_metodo}: {e}")
+                    print(f"Error en {nombre_metodo}: {e}")
         
         finally:
             # Restaurar carpeta original
             self.directorio_imagenes = carpeta_original
         
         print(f"\n🎯 ANÁLISIS MASIVO COMPLETADO")
-        print(f"✅ Métodos ejecutados: {len(metodos_ejecutados)}/9")
-        print(f"📁 Métodos completados: {', '.join(metodos_ejecutados)}")
-        print(f"📁 Resultados guardados en: {self.directorio_resultados}")
+        print(f"Métodos ejecutados: {len(metodos_ejecutados)}/9")
+        print(f"Métodos completados: {', '.join(metodos_ejecutados)}")
+        print(f"Resultados guardados en: {self.directorio_resultados}")
 
     # Métodos automáticos para procesamiento masivo (sin interacción del usuario)
     def _procesamiento_texturas_automatico(self):
@@ -2129,12 +2183,12 @@ class SistemaDeteccionVehicular:
             print(f"No se encontraron imágenes en: {self.directorio_imagenes}")
             return
             
-        print(f"🔍 Iniciando análisis de texturas en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de texturas en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 # Usar el método correcto del texture_analyzer
@@ -2149,7 +2203,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("texturas", resultados_totales, self.directorio_imagenes)
 
@@ -2159,12 +2213,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de momentos en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de momentos en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
@@ -2187,7 +2241,7 @@ class SistemaDeteccionVehicular:
                 resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("momentos", resultados_totales, self.directorio_imagenes)
 
@@ -2197,12 +2251,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de Hough en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de Hough en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 # Usar el método correcto del hough_analyzer
@@ -2227,7 +2281,7 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de HOG en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de HOG en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
@@ -2252,7 +2306,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("hog", resultados_totales, self.directorio_imagenes)
 
@@ -2262,7 +2316,7 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de KAZE en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de KAZE en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
@@ -2287,7 +2341,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("kaze", resultados_totales, self.directorio_imagenes)
 
@@ -2297,7 +2351,7 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de SURF en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de SURF en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
@@ -2322,7 +2376,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("surf", resultados_totales, self.directorio_imagenes)
 
@@ -2332,7 +2386,7 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de ORB en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de ORB en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
@@ -2357,7 +2411,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("orb", resultados_totales, self.directorio_imagenes)
 
@@ -2367,12 +2421,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de HOG+KAZE en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de HOG+KAZE en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 # Usar el método correcto del hog_kaze_analyzer
@@ -2386,7 +2440,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("hog_kaze", resultados_totales, self.directorio_imagenes)
 
@@ -2396,12 +2450,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de SURF+ORB en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de SURF+ORB en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 # Usar el método correcto del surf_orb_analyzer
@@ -2415,7 +2469,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("surf_orb", resultados_totales, self.directorio_imagenes)
 
@@ -2425,12 +2479,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de FREAK en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de FREAK en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
@@ -2452,7 +2506,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("freak", resultados_totales, self.directorio_imagenes)
 
@@ -2462,7 +2516,7 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de AKAZE en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de AKAZE en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
@@ -2499,12 +2553,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de GrabCut en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de GrabCut en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
@@ -2526,7 +2580,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("grabcut", resultados_totales, self.directorio_imagenes)
 
@@ -2536,12 +2590,12 @@ class SistemaDeteccionVehicular:
         if not imagenes:
             return
             
-        print(f"🔍 Iniciando análisis de LoG en {len(imagenes)} imágenes...")
+        print(f"Iniciando análisis de LoG en {len(imagenes)} imágenes...")
         resultados_totales = []
         
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.splitext(os.path.basename(ruta_imagen))[0]
-            print(f"📊 Procesando {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"Procesando {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 imagen = cv2.imread(ruta_imagen)
@@ -2563,7 +2617,7 @@ class SistemaDeteccionVehicular:
                     resultados_totales.append(resultado)
                     
             except Exception as e:
-                print(f"❌ Error procesando {nombre_imagen}: {e}")
+                print(f"Error procesando {nombre_imagen}: {e}")
                 
         self._generar_reporte_batch("log", resultados_totales, self.directorio_imagenes)
 
@@ -2575,20 +2629,20 @@ class SistemaDeteccionVehicular:
             carpeta = self.directorio_imagenes
         
         if not os.path.exists(carpeta):
-            print(f"❌ La carpeta no existe: {carpeta}")
+            print(f"La carpeta no existe: {carpeta}")
             return None
             
         return carpeta
     
     def _confirmar_procesamiento(self, tipo_analisis, num_imagenes, carpeta):
         """Confirma el procesamiento por lotes."""
-        print(f"\n📋 RESUMEN DEL PROCESAMIENTO:")
+        print(f"\nRESUMEN DEL PROCESAMIENTO:")
         print(f"   Tipo: {tipo_analisis}")
         print(f"   Carpeta: {carpeta}")
         print(f"   Imágenes: {num_imagenes}")
         print(f"   Salida: {self.directorio_resultados}")
         
-        confirmar = input("\n❓ ¿Continuar con el procesamiento? (s/N): ").strip().lower()
+        confirmar = input("\n¿Continuar con el procesamiento? (s/N): ").strip().lower()
         return confirmar in ['s', 'si', 'sí', 'y', 'yes']
     
     def _generar_reporte_batch(self, tipo_metodo, resultados, carpeta):
@@ -2702,11 +2756,11 @@ class SistemaDeteccionVehicular:
                     
                     txtfile.write("\n")
             
-            print(f"📊 Reporte generado: {csv_path}")
-            print(f"📝 Reporte generado: {txt_path}")
+            print(f"Reporte generado: {csv_path}")
+            print(f"Reporte generado: {txt_path}")
             
         except Exception as e:
-            print(f"❌ Error generando reporte: {e}")
+            print(f"Error generando reporte: {e}")
     
     def _generar_reporte_global(self, resultados_globales, carpeta):
         """Genera reporte global del análisis masivo."""
@@ -2728,20 +2782,20 @@ class SistemaDeteccionVehicular:
                 
                 total_imagenes = 0
                 for metodo, resultados in resultados_globales.items():
-                    txtfile.write(f"🔍 {metodo.upper()}\n")
+                    txtfile.write(f"{metodo.upper()}\n")
                     txtfile.write(f"   Imágenes procesadas: {len(resultados)}\n")
                     txtfile.write(f"   Estado: {'✅ Completado' if resultados else '❌ Falló'}\n\n")
                     total_imagenes += len(resultados)
                 
-                txtfile.write(f"📊 RESUMEN GLOBAL\n")
+                txtfile.write(f"RESUMEN GLOBAL\n")
                 txtfile.write(f"   Total de análisis exitosos: {total_imagenes}\n")
                 txtfile.write(f"   Métodos ejecutados: {len(resultados_globales)}\n")
                 txtfile.write(f"   Directorio de resultados: {self.directorio_resultados}\n")
             
-            print(f"📊 Reporte global generado: {txt_path}")
+            print(f"Reporte global generado: {txt_path}")
             
         except Exception as e:
-            print(f"❌ Error generando reporte global: {e}")
+            print(f"Error generando reporte global: {e}")
     
     # Métodos auxiliares para ejecutar análisis individuales en lote
     def _ejecutar_texturas_batch(self, imagenes):
@@ -2761,7 +2815,7 @@ class SistemaDeteccionVehicular:
                         resultado['imagen_nombre'] = nombre_imagen
                         resultados.append(resultado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_momentos_batch(self, imagenes):
@@ -2781,7 +2835,7 @@ class SistemaDeteccionVehicular:
                         resultado['imagen_nombre'] = nombre_imagen
                         resultados.append(resultado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_hough_batch(self, imagenes):
@@ -2801,7 +2855,7 @@ class SistemaDeteccionVehicular:
                         resultado['imagen_nombre'] = nombre_imagen
                         resultados.append(resultado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_hog_kaze_batch(self, imagenes):
@@ -2832,7 +2886,7 @@ class SistemaDeteccionVehicular:
                         }
                         resultados.append(resultado_combinado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_surf_orb_batch(self, imagenes):
@@ -2863,7 +2917,7 @@ class SistemaDeteccionVehicular:
                         }
                         resultados.append(resultado_combinado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_freak_batch(self, imagenes):
@@ -2883,7 +2937,7 @@ class SistemaDeteccionVehicular:
                         resultado['imagen_nombre'] = nombre_imagen
                         resultados.append(resultado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_akaze_batch(self, imagenes):
@@ -2903,7 +2957,7 @@ class SistemaDeteccionVehicular:
                         resultado['imagen_nombre'] = nombre_imagen
                         resultados.append(resultado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def _ejecutar_grabcut_batch(self, imagenes):
@@ -2943,7 +2997,7 @@ class SistemaDeteccionVehicular:
                         resultado['imagen_nombre'] = nombre_imagen
                         resultados.append(resultado)
             except Exception as e:
-                print(f"❌ Error en {os.path.basename(ruta_imagen)}: {e}")
+                print(f"Error en {os.path.basename(ruta_imagen)}: {e}")
         return resultados
     
     def ver_estadisticas(self):
@@ -3215,7 +3269,7 @@ class SistemaDeteccionVehicular:
     def menu_filtros(self):
         """Menú de filtros de imagen."""
         while True:
-            print("\n🔧 FILTROS DE IMAGEN")
+            print("\nFILTROS DE IMAGEN")
             print("-" * 50)
             print("1. Filtro de Desenfoque (Blur)")
             print("2. Filtro Gaussiano")
@@ -3760,7 +3814,7 @@ class SistemaDeteccionVehicular:
         if not self.verificar_imagen_cargada():
             return
         
-        print("\n🔍 ANÁLISIS OPTICAL FLOW - MÉTODO DE LA PROFESORA")
+        print("\nANÁLISIS OPTICAL FLOW - MÉTODO PREDETERMINADO")
         print("=" * 60)
         
         # Solicitar segunda imagen
@@ -3786,16 +3840,16 @@ class SistemaDeteccionVehicular:
                 nombre_imagen=f"optical_flow_profesora_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             )
             
-            print(f"✅ Análisis completado con método de la profesora")
-            print(f"📊 Magnitud promedio: {resultados['optical_flow_mean_magnitude']:.4f}")
-            print(f"📈 Magnitud máxima: {resultados['optical_flow_max_magnitude']:.4f}")
+            print(f"Análisis completado con método predeterminado")
+            print(f"Magnitud promedio: {resultados['optical_flow_mean_magnitude']:.4f}")
+            print(f"Magnitud máxima: {resultados['optical_flow_max_magnitude']:.4f}")
             
         except Exception as e:
-            print(f"❌ Error en análisis optical flow profesora: {e}")
+            print(f"Error en análisis optical flow predeterminado: {e}")
 
     def analisis_secuencias_carpeta(self):
         """Análisis de secuencias de imágenes en carpeta."""
-        print("\n📁 ANÁLISIS DE SECUENCIAS EN CARPETA")
+        print("\nANÁLISIS DE SECUENCIAS EN CARPETA")
         print("=" * 60)
         print("Este análisis procesa una carpeta completa de imágenes")
         print("para detectar patrones de movimiento y cambios temporales.")
@@ -3808,7 +3862,7 @@ class SistemaDeteccionVehicular:
         
         # Verificar que la carpeta existe
         if not os.path.exists(carpeta):
-            print(f"❌ La carpeta '{carpeta}' no existe.")
+            print(f"La carpeta '{carpeta}' no existe.")
             return
         
         # Solicitar patrón de archivos
@@ -3826,12 +3880,12 @@ class SistemaDeteccionVehicular:
                 nombre_secuencia=f"secuencia_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             )
             
-            print(f"✅ Análisis de secuencia completado")
-            print(f"📂 Archivos procesados: {resultados['num_transiciones']}")
-            print(f"🔄 Cambios detectados: {len(resultados['cambios_movimiento'])}")
+            print(f"Análisis de secuencia completado")
+            print(f"Archivos procesados: {resultados['num_transiciones']}")
+            print(f"Cambios detectados: {len(resultados['cambios_movimiento'])}")
             
         except Exception as e:
-            print(f"❌ Error en análisis de secuencias: {e}")
+            print(f"Error en análisis de secuencias: {e}")
 
     def analisis_comparativo_hog_kaze(self):
         """Delegada al handler."""
@@ -4420,7 +4474,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Traslación ({dx}, {dy})", resultado)
             
         except Exception as e:
-            print(f"❌ Error trasladando imagen: {e}")
+            print(f"Error trasladando imagen: {e}")
     
     def recortar_imagen(self):
         """Recorta una región rectangular de la imagen."""
@@ -4448,7 +4502,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Recorte ({x1},{y1},{x2},{y2})", resultado)
             
         except Exception as e:
-            print(f"❌ Error recortando imagen: {e}")
+            print(f"Error recortando imagen: {e}")
     
     def transformacion_perspectiva(self):
         """Aplica transformación de perspectiva con puntos predefinidos."""
@@ -4474,7 +4528,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Transformación de Perspectiva", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando transformación de perspectiva: {e}")
+            print(f"Error aplicando transformación de perspectiva: {e}")
     
     def escalar_imagen(self):
         """Escala la imagen por factores específicos."""
@@ -4492,7 +4546,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Escalado ({factor_x}, {factor_y or factor_x})", resultado)
             
         except Exception as e:
-            print(f"❌ Error escalando imagen: {e}")
+            print(f"Error escalando imagen: {e}")
         
     def transformacion_afin(self):
         """Aplica transformación afín con puntos predefinidos."""
@@ -4517,7 +4571,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Transformación Afín", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando transformación afín: {e}")
+            print(f"Error aplicando transformación afín: {e}")
         
     def corregir_distorsion(self):
         """Corrige distorsión de barril en la imagen."""
@@ -4536,7 +4590,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Corrección Distorsión (k1={k1})", resultado)
             
         except Exception as e:
-            print(f"❌ Error corrigiendo distorsión: {e}")
+            print(f"Error corrigiendo distorsión: {e}")
     
     # Operaciones lógicas
     def operacion_and(self):
@@ -4556,7 +4610,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Operación AND", resultado)
             
         except Exception as e:
-            print(f"❌ Error en operación AND: {e}")
+            print(f"Error en operación AND: {e}")
     
     def operacion_or(self):
         """Operación lógica OR entre dos imágenes."""
@@ -4575,7 +4629,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Operación OR", resultado)
             
         except Exception as e:
-            print(f"❌ Error en operación OR: {e}")
+            print(f"Error en operación OR: {e}")
     
     def operacion_not(self):
         """Operación lógica NOT (inversión) de la imagen."""
@@ -4590,7 +4644,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Operación NOT", resultado)
             
         except Exception as e:
-            print(f"❌ Error en operación NOT: {e}")
+            print(f"Error en operación NOT: {e}")
     
     def operacion_xor(self):
         """Operación lógica XOR entre dos imágenes."""
@@ -4609,7 +4663,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Operación XOR", resultado)
             
         except Exception as e:
-            print(f"❌ Error en operación XOR: {e}")
+            print(f"Error en operación XOR: {e}")
     
     def crear_mascara_rectangular(self):
         """Crea una máscara rectangular y la aplica a la imagen."""
@@ -4633,7 +4687,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Máscara Rectangular ({x},{y},{ancho},{alto})", resultado)
             
         except Exception as e:
-            print(f"❌ Error creando máscara rectangular: {e}")
+            print(f"Error creando máscara rectangular: {e}")
     
     def crear_mascara_circular(self):
         """Crea una máscara circular y la aplica a la imagen."""
@@ -4656,7 +4710,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Máscara Circular ({centro_x},{centro_y},r={radio})", resultado)
             
         except Exception as e:
-            print(f"❌ Error creando máscara circular: {e}")
+            print(f"Error creando máscara circular: {e}")
     
     def aplicar_mascara(self):
         """Aplica la imagen secundaria como máscara a la imagen actual."""
@@ -4675,7 +4729,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Máscara Aplicada", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando máscara: {e}")
+            print(f"Error aplicando máscara: {e}")
     
     def segmentar_por_color(self):
         """Segmenta la imagen por rango de color."""
@@ -4728,7 +4782,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Segmentación Color {espacio}", resultado)
             
         except Exception as e:
-            print(f"❌ Error segmentando por color: {e}")
+            print(f"Error segmentando por color: {e}")
     
     def combinar_mascaras(self):
         """Combina múltiples máscaras (funcionalidad simplificada)."""
@@ -4760,7 +4814,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Máscaras Combinadas ({operacion})", resultado)
             
         except Exception as e:
-            print(f"❌ Error combinando máscaras: {e}")
+            print(f"Error combinando máscaras: {e}")
     
     # Más operaciones morfológicas
     def aplicar_apertura(self):
@@ -4769,7 +4823,7 @@ INICIO RÁPIDO:
             resultado = self.operaciones_morfologicas.apertura(self.imagen_actual)
             self._mostrar_resultado_preprocesamiento("Apertura", resultado)
         except Exception as e:
-            print(f"❌ Error aplicando apertura: {e}")
+            print(f"Error aplicando apertura: {e}")
     
     def aplicar_cierre(self):
         """Aplica cierre."""
@@ -4777,7 +4831,7 @@ INICIO RÁPIDO:
             resultado = self.operaciones_morfologicas.cierre(self.imagen_actual)
             self._mostrar_resultado_preprocesamiento("Cierre", resultado)
         except Exception as e:
-            print(f"❌ Error aplicando cierre: {e}")
+            print(f"Error aplicando cierre: {e}")
     
     def aplicar_gradiente_morfologico(self):
         """Aplica gradiente morfológico (dilatación - erosión)."""
@@ -4794,7 +4848,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Gradiente Morfológico (k={kernel_size})", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando gradiente morfológico: {e}")
+            print(f"Error aplicando gradiente morfológico: {e}")
     
     def aplicar_top_hat(self):
         """Aplica transformación Top Hat."""
@@ -4811,7 +4865,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Top Hat (k={kernel_size})", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando Top Hat: {e}")
+            print(f"Error aplicando Top Hat: {e}")
     
     def aplicar_black_hat(self):
         """Aplica transformación Black Hat."""
@@ -4828,7 +4882,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Black Hat (k={kernel_size})", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando Black Hat: {e}")
+            print(f"Error aplicando Black Hat: {e}")
     
     def eliminar_ruido_binario(self):
         """Elimina ruido en imagen binaria usando morfología."""
@@ -4852,7 +4906,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Eliminación Ruido ({metodo})", resultado)
             
         except Exception as e:
-            print(f"❌ Error eliminando ruido: {e}")
+            print(f"Error eliminando ruido: {e}")
     
     def extraer_contornos_morfologicos(self):
         """Extrae contornos usando operaciones morfológicas."""
@@ -4869,7 +4923,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Contornos Morfológicos (k={kernel_size})", resultado)
             
         except Exception as e:
-            print(f"❌ Error extrayendo contornos: {e}")
+            print(f"Error extrayendo contornos: {e}")
     
     def aplicar_esqueletizacion(self):
         """Aplica esqueletización a la imagen binaria."""
@@ -4885,7 +4939,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Esqueletización", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando esqueletización: {e}")
+            print(f"Error aplicando esqueletización: {e}")
     
     def rellenar_huecos(self):
         """Rellena huecos en imagen binaria."""
@@ -4901,7 +4955,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento("Relleno de Huecos", resultado)
             
         except Exception as e:
-            print(f"❌ Error rellenando huecos: {e}")
+            print(f"Error rellenando huecos: {e}")
     
     def limpiar_bordes(self):
         """Limpia objetos que tocan los bordes de la imagen."""
@@ -4923,7 +4977,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Limpieza Bordes ({conectividad}-conn)", resultado)
             
         except Exception as e:
-            print(f"❌ Error limpiando bordes: {e}")
+            print(f"Error limpiando bordes: {e}")
     
     # Más segmentación
     def aplicar_umbral_adaptativo(self):
@@ -4980,7 +5034,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Segmentación HSV (H:{hue_min}-{hue_max})", resultado)
             
         except Exception as e:
-            print(f"❌ Error segmentando por color HSV: {e}")
+            print(f"Error segmentando por color HSV: {e}")
     
     def aplicar_crecimiento_regiones(self):
         """Aplica algoritmo de crecimiento de regiones."""
@@ -5000,7 +5054,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Crecimiento de Regiones (umbral={umbral})", resultado)
             
         except Exception as e:
-            print(f"❌ Error aplicando crecimiento de regiones: {e}")
+            print(f"Error aplicando crecimiento de regiones: {e}")
     
     def segmentar_por_textura(self):
         """Segmenta imagen basándose en características de textura."""
@@ -5017,7 +5071,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"Segmentación Textura (ventana={tamano_ventana})", resultado)
             
         except Exception as e:
-            print(f"❌ Error segmentando por textura: {e}")
+            print(f"Error segmentando por textura: {e}")
     
     def aplicar_grabcut(self):
         """Aplica algoritmo GrabCut para segmentación interactiva."""
@@ -5042,7 +5096,7 @@ INICIO RÁPIDO:
             self._mostrar_resultado_preprocesamiento(f"GrabCut (iter={iteraciones})", resultado)
             
         except Exception as e:
-            print(f"❌ Error en GrabCut: {e}")
+            print(f"Error en GrabCut: {e}")
 
     def ejecutar_todos_metodos_caracteristicas(self):
         """
@@ -5068,7 +5122,7 @@ INICIO RÁPIDO:
         errores = []
         
         # 1. SURF (Speeded Up Robust Features)
-        print("\n🔍 1/7 - Ejecutando SURF...")
+        print("\n1/7 - Ejecutando SURF...")
         try:
             resultado_surf = self.surf_orb_analyzer.extraer_caracteristicas_surf(
                 self.imagen_actual, 
@@ -5078,14 +5132,14 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_surf"
             )
             metodos_ejecutados.append("SURF")
-            print("✅ SURF completado")
+            print("SURF completado")
         except Exception as e:
             error_msg = f"❌ Error en SURF: {e}"
             print(error_msg)
             errores.append(error_msg)
         
         # 2. ORB (Oriented FAST and Rotated BRIEF)
-        print("\n🔍 2/7 - Ejecutando ORB...")
+        print("\n2/7 - Ejecutando ORB...")
         try:
             resultado_orb = self.surf_orb_analyzer.extraer_caracteristicas_orb(
                 self.imagen_actual, 
@@ -5095,14 +5149,14 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_orb"
             )
             metodos_ejecutados.append("ORB")
-            print("✅ ORB completado")
+            print("ORB completado")
         except Exception as e:
             error_msg = f"❌ Error en ORB: {e}"
             print(error_msg)
             errores.append(error_msg)
         
         # 3. HOG (Histogram of Oriented Gradients)
-        print("\n🔍 3/7 - Ejecutando HOG...")
+        print("\n3/7 - Ejecutando HOG...")
         try:
             resultado_hog = self.hog_kaze_analyzer.extraer_caracteristicas_hog(
                 self.imagen_actual, 
@@ -5112,14 +5166,14 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_hog"
             )
             metodos_ejecutados.append("HOG")
-            print("✅ HOG completado")
+            print("HOG completado")
         except Exception as e:
             error_msg = f"❌ Error en HOG: {e}"
             print(error_msg)
             errores.append(error_msg)
         
         # 4. KAZE
-        print("\n🔍 4/7 - Ejecutando KAZE...")
+        print("\n4/7 - Ejecutando KAZE...")
         try:
             resultado_kaze = self.hog_kaze_analyzer.extraer_caracteristicas_kaze(
                 self.imagen_actual, 
@@ -5129,14 +5183,14 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_kaze"
             )
             metodos_ejecutados.append("KAZE")
-            print("✅ KAZE completado")
+            print("KAZE completado")
         except Exception as e:
             error_msg = f"❌ Error en KAZE: {e}"
             print(error_msg)
             errores.append(error_msg)
         
         # 5. AKAZE
-        print("\n🔍 5/7 - Ejecutando AKAZE...")
+        print("\n5/7 - Ejecutando AKAZE...")
         try:
             resultado_akaze = self.advanced_analyzer.extraer_caracteristicas_akaze(
                 self.imagen_actual, 
@@ -5146,14 +5200,14 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_akaze"
             )
             metodos_ejecutados.append("AKAZE")
-            print("✅ AKAZE completado")
+            print("AKAZE completado")
         except Exception as e:
             error_msg = f"❌ Error en AKAZE: {e}"
             print(error_msg)
             errores.append(error_msg)
         
         # 6. FREAK (Fast Retina Keypoint)
-        print("\n🔍 6/7 - Ejecutando FREAK...")
+        print("\n6/7 - Ejecutando FREAK...")
         try:
             resultado_freak = self.advanced_analyzer.extraer_caracteristicas_freak(
                 self.imagen_actual, 
@@ -5163,14 +5217,14 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_freak"
             )
             metodos_ejecutados.append("FREAK")
-            print("✅ FREAK completado")
+            print("FREAK completado")
         except Exception as e:
             error_msg = f"❌ Error en FREAK: {e}"
             print(error_msg)
             errores.append(error_msg)
         
         # 7. GrabCut Segmentation
-        print("\n🔍 7/7 - Ejecutando GrabCut...")
+        print("\n7/7 - Ejecutando GrabCut...")
         try:
             resultado_grabcut = self.advanced_analyzer.analizar_grabcut_segmentation(
                 self.imagen_actual, 
@@ -5180,7 +5234,7 @@ INICIO RÁPIDO:
                 nombre_imagen=f"{nombre_imagen}_grabcut"
             )
             metodos_ejecutados.append("GrabCut")
-            print("✅ GrabCut completado")
+            print("GrabCut completado")
         except Exception as e:
             error_msg = f"❌ Error en GrabCut: {e}"
             print(error_msg)
@@ -5190,7 +5244,7 @@ INICIO RÁPIDO:
         print("\n" + "="*80)
         print("RESUMEN DEL ANÁLISIS COMPLETO")
         print("="*80)
-        print(f"✅ Métodos ejecutados exitosamente ({len(metodos_ejecutados)}/7):")
+        print(f"Métodos ejecutados exitosamente ({len(metodos_ejecutados)}/7):")
         for metodo in metodos_ejecutados:
             print(f"   ✓ {metodo}")
         
@@ -5199,12 +5253,12 @@ INICIO RÁPIDO:
             for error in errores:
                 print(f"   • {error}")
         
-        print(f"\n📁 Los resultados se han guardado en: {self.directorio_resultados}")
+        print(f"\nLos resultados se han guardado en: {self.directorio_resultados}")
         print("   • Archivos CSV con estadísticas detalladas")
         print("   • Archivos TXT con reportes textuales")
         print("   • Imágenes con visualizaciones (si están habilitadas)")
         
-        print("\n🎯 Análisis completo de características terminado")
+        print("\nAnálisis completo de características terminado")
         print("="*80)
 
 def main():

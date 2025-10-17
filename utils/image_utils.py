@@ -36,12 +36,12 @@ class ImageHandler:
                 
             imagen = cv2.imread(ruta_imagen)
             if imagen is None:
-                print(f"❌ Error: No se pudo cargar la imagen: {ruta_imagen}")
+                print(f"Error: No se pudo cargar la imagen: {ruta_imagen}")
                 return None
                 
             return imagen
         except Exception as e:
-            print(f"❌ Error cargando imagen: {e}")
+            print(f"Error cargando imagen: {e}")
             return None
     
     @staticmethod
@@ -128,13 +128,13 @@ class ImageHandler:
             
             success = cv2.imwrite(ruta_salida, imagen)
             if success:
-                print(f"✅ Imagen guardada: {ruta_salida}")
+                print(f"Imagen guardada: {ruta_salida}")
                 return True
             else:
-                print(f"❌ Error guardando imagen: {ruta_salida}")
+                print(f"Error guardando imagen: {ruta_salida}")
                 return False
         except Exception as e:
-            print(f"❌ Error guardando imagen: {e}")
+            print(f"Error guardando imagen: {e}")
             return False
     
     @staticmethod

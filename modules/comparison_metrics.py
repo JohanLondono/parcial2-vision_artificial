@@ -332,7 +332,7 @@ class ComparisonAnalyzer:
         print("\n" + "="*70)
         
         # Recomendaciones
-        print("\n📊 RECOMENDACIONES:")
+        print("\nRECOMENDACIONES:")
         
         # Algoritmo más rápido
         idx_rapido = np.argmin(tiempos)
@@ -340,11 +340,11 @@ class ComparisonAnalyzer:
         
         # Algoritmo con más características
         idx_features = np.argmax(num_features)
-        print(f"🔍 Más características: {nombres[idx_features]} ({num_features[idx_features]} puntos)")
+        print(f"Más características: {nombres[idx_features]} ({num_features[idx_features]} puntos)")
         
         # Algoritmo más uniforme
         idx_uniforme = np.argmax(uniformidades)
-        print(f"📐 Distribución más uniforme: {nombres[idx_uniforme]} ({uniformidades[idx_uniforme]:.3f})")
+        print(f"Distribución más uniforme: {nombres[idx_uniforme]} ({uniformidades[idx_uniforme]:.3f})")
         
         print("\n")
     

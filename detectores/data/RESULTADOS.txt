@@ -1,0 +1,291 @@
+SIFT:
+
+Métricas Globales (Cantidad y Diversidad)
+
+Número de puntos clave: 500
+Se identificó una cantidad muy alta de características distintivas en la imagen. Esto es ideal para tareas como el emparejamiento de imágenes o el reconocimiento de objetos.
+Dimensión de descriptores: 128 valores
+Cada uno de los 500 puntos clave está representado por un vector de 128 números. Este vector es la "huella digital" del punto, codificando la información de gradiente local.
+Diversidad: 520.33479486
+La alta diversidad indica que los 500 descriptores son muy diferentes entre sí. Esta gran variación es excelente para la discriminación y asegura que cada punto represente una característica única.
+Entropía: 1.48824160
+El valor bajo de entropía sugiere que, aunque los descriptores son diversos, los valores internos dentro del vector de 128 números tienen una distribución de intensidad concentrada.
+Características del Punto Clave Individual 
+El punto clave 1 sirve como ejemplo de las propiedades de las características detectadas:
+
+Posición (x,y): (59.91, 149.52)
+El punto de interés se encuentra en la región central vertical, desplazado hacia el lado izquierdo de la imagen.
+Tamaño: 2.18
+Este es un valor de pequeña escala. El punto clave fue detectado como una característica de detalle fino o de escala menor.
+Ángulo: 268.28°
+Es la orientación dominante de los patrones de intensidad en la vecindad del punto. Este valor garantiza que el punto sea invariante a la rotación.
+Respuesta: 0.05826349$
+Es la fuerza del punto clave. Es una respuesta moderadamente baja, indicando que la característica es sutil o de contraste no muy alto.
+
+ORB:
+
+Métricas Globales (Eficiencia y Unicidad del Descriptor)
+
+Número de puntos clave: 409
+Se detectó una cantidad moderadamente alta de características distintivas. Es el número de esquinas o puntos fuertes que el detector FAST (parte de ORB) encontró.
+Dimensión de descriptores: 32 bytes (256 bits)
+Cada punto clave está codificado por un descriptor rBRIEF de 256 bits. Este descriptor binario es extremadamente rápido de comparar usando la Distancia de Hamming.
+Unicidad: 1.0000
+Este valor perfecto indica que cada uno de los 409 descriptores es completamente único. Esto es excelente para la discriminación y el emparejamiento, ya que asegura que un punto clave no se confunda con otro.
+Ratio de bits activos: 0.5118
+Aproximadamente el 51% de los bits en los descriptores son '1'. Este balance perfecto (cercano al 50%) es ideal y maximiza la capacidad del descriptor rBRIEF para distinguir entre características.
+Distancia Hamming promedio: 31.7467
+La distancia promedio entre todos los descriptores es moderada. Indica que, aunque los descriptores son únicos, en promedio, solo difieren en unos 32 bits, lo cual es normal para descriptores binarios en una imagen homogénea.
+Desviación estándar Hamming: 0.6101
+CORRECCIÓN: Una desviación estándar TAN baja (0.61) en distancias de Hamming indica que existe MUY POCA variabilidad en las diferencias entre descriptores, lo que sugiere que los puntos clave detectados son muy similares entre sí, posiblemente debido a patrones repetitivos o texturas uniformes. Esto NO es necesariamente bueno para discriminación, ya que descriptores muy similares pueden causar falsos emparejamientos.
+Entropía: -232.21278553
+CORRECCIÓN: Una entropía negativa en descriptores binarios ORB es matemáticamente incorrecta según la definición de Shannon. La entropía debe ser siempre positiva o cero. Este valor negativo indica un error en el cálculo de la métrica o una implementación específica no estándar. En descriptores binarios correctamente calculados, la entropía debería estar entre 0 y log₂(256) ≈ 8 bits, donde valores altos indican mayor información/variabilidad.
+
+Características del Punto Clave Individual (Ejemplo)
+
+Posición (x,y): (108.00, 108.00)
+Este punto de interés está situado en la región central de la imagen.
+Tamaño: 31.00
+Este valor de escala relativamente grande indica que el punto clave fue detectado como una característica de gran escala (no un detalle fino). ORB es un algoritmo multiescala.
+Ángulo: 166.63°
+Es la orientación dominante local (calculada para hacerlo invariante a la rotación).
+Respuesta: 0.00252823$
+La respuesta es extremadamente baja. Esto sugiere que este punto clave es muy sutil y tiene un contraste o fuerza muy débil en la detección inicial.
+
+
+HOG:
+
+Métricas Generales de las Características HOG
+
+Número de características: 25920
+El análisis HOG generó un número muy grande de características (25920). Cada una de estas características es un valor numérico que describe un aspecto de la forma y los bordes en una pequeña región de la imagen.
+Valor mínimo: 0.00000000
+El valor más bajo encontrado entre todas las 25920 características HOG es cero. Esto es común e indica que algunas regiones no tuvieron gradientes significativos o se alinearon de manera que su contribución a ciertos bins del histograma fue nula.
+Valor máximo: 0.57671721
+El valor más alto encontrado entre todas las características es $0.5767$. Este valor representa la fuerza máxima de un gradiente orientado en alguna parte de la imagen.
+Promedio: 0.13778481
+El valor promedio de todas las características HOG es $0.1377$. Indica la intensidad promedio de los gradientes en la imagen. Un valor bajo sugiere que, en general, los bordes no son extremadamente fuertes.
+Desviación estándar: 0.09377165
+La desviación estándar es relativamente baja ($0.0937$). Esto significa que la mayoría de los valores de las características HOG están cercanos al promedio, lo que podría indicar una textura de gradientes relativamente uniforme en toda la imagen.
+Energía total: 719.99999985
+Significado: La "energía total" es la suma de los cuadrados de todas las características. Un valor alto ($719.99$) sugiere que, a pesar de la respuesta promedio individual no ser muy alta, la cantidad acumulada de información de gradiente en la imagen es considerable.
+Entropía: -139.57812919
+CORRECCIÓN: Una entropía negativa es matemáticamente incorrecta según la definición de Shannon (H = -Σ p·log₂(p)). La entropía siempre debe ser ≥ 0. Este valor indica un error en el cálculo. Para características HOG correctamente calculadas, la entropía debería ser positiva, donde valores altos indican mayor diversidad en la distribución de gradientes orientados y valores bajos indican concentración en pocas orientaciones dominantes.
+Características HOG Completas (Ejemplo)
+Característica 1: 0.25369590
+Característica 2: 0.24327555
+Característica 3: 0.01943836
+Característica 4: 0.11140978
+Característica 5: 0.23064555
+Característica 6: 0.06190870
+Estos son ejemplos individuales de los 25920 valores. Cada uno representa la magnitud de un gradiente en una orientación y celda específicas.
+CORRECCIÓN: Cada valor HOG NO representa "la magnitud de un gradiente en una orientación y celda específicas". Los valores HOG son componentes del vector de características final que resulta de: 1) calcular histogramas de orientaciones de gradientes por celda, 2) normalizar estos histogramas por bloques usando normalización L2-Hys. Por tanto, cada valor es una componente normalizada que combina información de múltiples píxeles y celdas vecinas, no un gradiente individual. Valores más altos (como Característica 1 y 2) indican una presencia más fuerte de ese tipo de gradiente, mientras que valores bajos (como Característica 3) indican poca o ninguna presencia.
+
+KAZE:
+
+Métricas Globales (Cantidad y Propiedades de los Descriptores)
+
+Número de puntos clave: 304
+Se detectó un número de 304 características distintivas o puntos de interés en la imagen. Esto representa las ubicaciones clave identificadas por el algoritmo KAZE.
+Dimensión de descriptores: 64
+Cada uno de los 304 puntos clave está representado por un vector de 64 valores flotantes. Este descriptor es más compacto que el de SIFT (128 valores) y codifica la información de intensidad local alrededor del punto clave.
+CORRECCIÓN: Los descriptores KAZE de 64 dimensiones NO codifican "información de intensidad local", sino información de GRADIENTES locales. KAZE utiliza un enfoque basado en gradientes similar a SIFT, pero con difusión no lineal. Cada componente del descriptor codifica la distribución de gradientes orientados en subregiones alrededor del punto clave, no valores de intensidad directos.
+Promedio: 0.07284498
+El valor promedio de todos los componentes de los descriptores (los $64 \times 304$ valores) es bajo ($0.0728$). Esto sugiere que los valores de los descriptores tienen una magnitud generalmente pequeña.
+Desviación estándar: 0.10158055
+La desviación estándar de los valores de los descriptores es relativamente baja ($0.1015$). Esto indica que hay una uniformidad considerable en los valores que componen los descriptores, es decir, no hay grandes variaciones dentro de ellos.
+Energía: 304.00000000
+CORRECCIÓN: El valor de energía exactamente igual al número de puntos clave (304.00) NO indica que "los descriptores han sido normalizados". Más bien sugiere que cada descriptor fue normalizado a norma L2 = 1, por lo que la suma de cuadrados de cada descriptor es 1, y la energía total es 304 × 1 = 304. Esto confirma normalización L2 por descriptor individual, no una medida de "información total".
+Entropía: -57.81163447
+CORRECCIÓN: Una entropía negativa es matemáticamente incorrecta según la teoría de información de Shannon. La entropía debe ser siempre ≥ 0. Este valor negativo indica un error en el cálculo de la métrica. Para descriptores KAZE correctamente calculados, la entropía debería ser positiva, donde valores altos indican mayor variabilidad entre descriptores y valores bajos indican similaridad o patrones repetitivos.
+Características del Punto Clave Individual (Ejemplo)
+Posición (x,y): (26.90, 6.52)
+Este punto de interés está localizado cerca de la esquina superior izquierda de la imagen.
+Tamaño: 3.44
+Este valor de escala pequeña indica que el punto clave fue detectado como una característica de detalle fino.
+Ángulo: $34.81^{\circ}$
+Significado: Es la orientación dominante de los gradientes en la vecindad del punto, lo que confiere invarianza a la rotación.
+Respuesta: $0.00513517$
+Significado: La respuesta es extremadamente baja. Esto sugiere que este punto clave es muy sutil y tiene un contraste o saliencia muy débil en la detección.
+Descriptor completo: [-0.20316577, -0.17514974, 0.29131803, ...]
+Significado: Este es el vector de 64 valores flotantes que representa la "huella digital" del punto clave. Se utiliza para comparar y emparejar este punto con otros en diferentes imágenes o escenas.
+
+AKAZE:
+
+Métricas Globales (Eficiencia y Robustez Mejorada)
+
+Número de puntos clave: 171
+AKAZE detectó 171 características distintivas. Al ser la versión acelerada de KAZE, mantiene alta calidad de detección pero con mayor eficiencia computacional. Este número indica una buena densidad de características para aplicaciones de tiempo real.
+
+Densidad de puntos: 0.00339286
+La densidad representa la relación entre puntos clave detectados y el total de píxeles en la imagen. Un valor de 0.0034 indica aproximadamente 3.4 puntos por cada 1000 píxeles, lo cual es adecuado para balancear información y eficiencia computacional.
+
+Ubicación promedio X: 149.81, Y: 85.40
+El centroide de los puntos clave se encuentra ligeramente desplazado hacia la derecha y en la parte superior de la imagen. Esto sugiere que las características más distintivas se concentran en esa región, posiblemente donde hay mayor variación textural o estructural.
+
+Tamaño promedio: 5.49
+El tamaño promedio de los puntos clave indica que AKAZE detectó principalmente características de escala media-pequeña. Un valor de 5.49 sugiere detecciones enfocadas en detalles locales, ideal para análisis de texturas y elementos finos.
+
+Respuesta promedio: 0.006288
+La respuesta promedio es relativamente baja, indicando que los puntos detectados tienen una fuerza moderada. AKAZE tiende a ser más selectivo que otros algoritmos, prefiriendo características estables aunque no necesariamente las más fuertes.
+
+Número de escalas: 2
+AKAZE detectó características en 2 escalas diferentes, lo que indica capacidad multi-escala pero concentrada en un rango específico. Esto es eficiente para aplicaciones que no requieren análisis de escalas muy amplias.
+
+Entropía de escalas: 0.8157
+La entropía de escalas mide la diversidad en la distribución de escalas detectadas. Un valor de 0.82 indica una distribución relativamente uniforme entre las 2 escalas, sugiriendo que ambas escalas contribuyen significativamente a la detección.
+
+Estabilidad multi-escala: 4514.1095
+Esta métrica mide qué tan consistentes son las detecciones a través de diferentes escalas. Un valor alto como 4514 indica que las características detectadas son muy estables y repetibles entre escalas, lo cual es excelente para matching robusto.
+
+Características del Punto Clave Individual (Ejemplo)
+Posición (x,y): (143.71, 33.60)
+Este punto está localizado en la región superior-central de la imagen, sugiriendo la presencia de una característica distintiva en esa área.
+
+Tamaño: 4.80
+Escala pequeña-media, indicando una característica de detalle fino detectada por AKAZE.
+
+Ángulo: 160.56°
+Orientación específica que proporciona invarianza rotacional al descriptor.
+
+Respuesta: 0.003919
+Fuerza moderada-baja del punto clave, pero suficiente para ser considerado estable por AKAZE.
+
+Octava: 0
+Detectado en la octava base (resolución original), indicando una característica de alta resolución.
+
+FREAK:
+
+Métricas Globales (Eficiencia Bio-inspirada)
+
+Número de puntos clave: 49
+FREAK detectó 49 puntos clave, un número relativamente bajo que refleja su naturaleza selectiva. FREAK está diseñado para identificar las características más distintivas inspirándose en el sistema visual humano, por lo que prefiere calidad sobre cantidad.
+
+Densidad de puntos: 0.00097222
+Una densidad muy baja (≈1 punto por cada 1000 píxeles) que confirma la selectividad de FREAK. Esta baja densidad es intencional y beneficiosa para aplicaciones que requieren matching preciso con menos características.
+
+Ubicación promedio X: 156.65, Y: 84.14
+El centroide está desplazado hacia la derecha y en la parte superior, similar a AKAZE, sugiriendo que ambos algoritmos identifican características en regiones similares pero FREAK es más selectivo.
+
+Tamaño promedio: 7.31
+Tamaño promedio mayor que AKAZE, indicando que FREAK detecta características en escalas ligeramente mayores. Esto es consistente con su diseño bio-inspirado que prioriza características más prominentes.
+
+Respuesta promedio: 41.609227
+Respuesta extremadamente alta comparada con otros algoritmos. Esto indica que FREAK solo selecciona puntos con respuestas muy fuertes, asegurando alta distintividad y estabilidad.
+
+Ratio de bits activos: 0.5206
+Aproximadamente 52% de los bits en los descriptores FREAK están activos ('1'). Este balance cercano al 50% es ideal para descriptores binarios, maximizando la capacidad discriminativa del descriptor de 512 bits.
+
+Entropía de bits: -232.2541
+CORRECCIÓN: Una entropía negativa es matemáticamente incorrecta según la teoría de información de Shannon. La entropía debe ser siempre ≥ 0. Este valor indica un error en el cálculo de la métrica. Para descriptores binarios FREAK correctamente calculados, la entropía debería estar entre 0 y 9 bits (log₂(512)), donde valores altos indican mayor variabilidad entre descriptores.
+
+Diversidad de descriptores: 62.3503
+Esta métrica mide qué tan diferentes son los descriptores entre sí. Un valor de 62.35 en una escala de distancia Hamming indica buena diversidad entre descriptores, lo cual es excelente para evitar falsos emparejamientos.
+
+Complejidad de patrón: 214.4490
+Mide la complejidad de los patrones detectados por FREAK. Un valor alto como 214 indica que las características detectadas tienen patrones complejos y distintivos, ideal para reconocimiento robusto.
+
+Densidad centro retina: 0.3673
+FREAK simula la retina humana con mayor densidad de "fotorreceptores" en el centro. Un valor de 0.37 indica que el 37% de las características se concentran en la región central del patrón retinal, mimicando la fóvea humana.
+
+Densidad periferia retina: 0.1633
+Solo el 16% de las características se distribuyen en la periferia del patrón retinal. Esta diferencia con el centro (37% vs 16%) confirma el diseño bio-inspirado que prioriza información central sobre periférica.
+
+Características del Punto Clave Individual (Ejemplo)
+Posición (x,y): (169.00, 70.00)
+Punto localizado en la región derecha-superior de la imagen.
+
+Tamaño: 4.00
+Escala pequeña-media, pero con respuesta muy alta.
+
+Ángulo: 36.09°
+Orientación que garantiza invarianza rotacional del descriptor FREAK.
+
+Respuesta: 30.000000
+Respuesta extremadamente alta, confirmando que FREAK solo selecciona las características más distintivas y estables.
+
+GRABCUT:
+
+Métricas de Segmentación (Separación Primer Plano/Fondo)
+
+Ratio primer plano: 0.384801
+Aproximadamente el 38.5% de la imagen fue clasificado como primer plano (objeto de interés). Este porcentaje indica una segmentación donde el objeto ocupa una porción considerable pero no dominante de la imagen, lo cual es típico en escenas vehiculares.
+
+Ratio fondo: 0.615199
+El 61.5% de la imagen corresponde al fondo. La relación 38.5% primer plano vs 61.5% fondo sugiere una segmentación balanceada con predominio del fondo, apropiada para aislar objetos específicos del contexto.
+
+Número de regiones: 14
+GrabCut identificó 14 regiones conectadas distintas en el primer plano. Un número moderado de regiones indica que el objeto segmentado puede tener múltiples componentes o que existen pequeñas regiones adicionales clasificadas como primer plano.
+
+Área región más grande: 237621.0
+La región más grande contiene 237,621 píxeles, lo cual representa la mayor parte del primer plano segmentado. Esta región dominante sugiere que la segmentación identificó correctamente el objeto principal.
+
+Área promedio regiones: 17027.43
+El área promedio por región es de 17,027 píxeles. La gran diferencia entre el área mayor (237,621) y el promedio (17,027) indica que hay una región principal muy grande y varias regiones secundarias mucho más pequeñas.
+
+Compacidad promedio: 0.7587
+La compacidad mide qué tan similares son las regiones a un círculo (valor 1 = círculo perfecto). Un valor de 0.76 indica regiones moderadamente compactas, sugiriendo formas relativamente regulares pero con cierta elongación o irregularidad.
+
+Solidez promedio: 0.8894
+La solidez mide la proporción entre el área de la región y el área de su envolvente convexa. Un valor de 0.89 indica regiones muy sólidas con pocas concavidades, sugiriendo formas relativamente simples y completas.
+
+Coherencia de bordes: 0.6291
+Esta métrica evalúa qué tan bien alineados están los bordes de la segmentación con los bordes reales de la imagen. Un valor de 0.63 indica coherencia moderada-buena, sugiriendo que la segmentación respeta mayormente los bordes naturales del objeto.
+
+Estadísticas de Segmentación Específicas
+Iteraciones GrabCut: 5
+El algoritmo convergió en 5 iteraciones, indicando que la segmentación se estabilizó relativamente rápido sin requerir refinamiento extenso.
+
+Píxeles de primer plano: 715,152
+Número total de píxeles clasificados como objeto de interés.
+
+Píxeles de fondo: 1,143,348
+Número total de píxeles clasificados como fondo.
+
+Número de regiones conectadas: 14
+Confirmación del número de componentes conectados en la segmentación final.
+
+OPTICAL FLOW:
+
+Métricas de Movimiento (Análisis Farneback)
+
+Magnitud promedio: 0.178133
+La magnitud promedio del flujo óptico es 0.18 píxeles por frame. Este valor bajo indica movimiento sutil o lento en la escena, típico de imágenes estáticas o con cambios mínimos entre frames consecutivos.
+
+Magnitud máxima: 16.454674
+El movimiento máximo detectado fue de 16.45 píxeles, indicando que aunque el movimiento promedio es bajo, existen regiones con desplazamientos significativos. Esto puede corresponder a objetos en movimiento o cambios locales importantes.
+
+Desviación magnitud: 0.659455
+La desviación estándar de 0.66 indica que la mayoría de píxeles tienen magnitudes cercanas al promedio (0.18), con relativamente pocas regiones de movimiento intenso. Esto sugiere movimiento uniforme y predecible.
+
+Ángulo promedio (radianes): 3.048430
+El ángulo promedio en radianes (≈174.6°) indica la dirección dominante del movimiento.
+
+Ángulo promedio (grados): 174.66
+La dirección promedio de 174.66° está muy cerca de 180°, indicando movimiento predominantemente hacia la izquierda (dirección oeste). Esto podría corresponder a un patrón de movimiento específico en la escena.
+
+Dirección dominante: 180°
+La dirección dominante exacta es 180°, confirmando que el movimiento principal es horizontal hacia la izquierda. Esta consistencia direccional sugiere un patrón de flujo organizado.
+
+Entropía direccional: 0.0895
+Una entropía direccional muy baja (0.09) indica que el movimiento está altamente concentrado en pocas direcciones, principalmente alrededor de 180°. Esto sugiere un patrón de movimiento muy organizado y predecible.
+
+Ratio píxeles en movimiento: 0.0104
+Solo el 1.04% de los píxeles muestran movimiento significativo. Este porcentaje extremadamente bajo confirma que la escena es mayormente estática con movimiento localizado en regiones muy específicas.
+
+Coherencia espacial: 13.3342
+La coherencia espacial mide qué tan consistente es el flujo en regiones vecinas. Un valor de 13.33 indica alta coherencia, sugiriendo que las regiones en movimiento tienen patrones similares y organizados, no movimiento caótico o ruido.
+
+Configuración del Algoritmo Farneback
+- Escala piramidal: 0.5 (cada nivel de la pirámide es la mitad del anterior)
+- Niveles piramidales: 3 (análisis multi-resolución en 3 escalas)
+- Tamaño de ventana: 15 (ventana de 15×15 píxeles para análisis local)
+- Iteraciones: 3 (refinamiento del flujo en 3 iteraciones)
+- Orden polinomial: 5 (aproximación polinomial de orden 5 para estimación local)
+- Sigma polinomial: 1.2 (desviación estándar para ponderación Gaussiana)
+
+Interpretación Global del Flujo Óptico
+- Campo de flujo: Calculado para imagen de 350×450 píxeles (157,500 píxeles totales)
+- Patrón de movimiento: Altamente organizado y direccional (180°)
+- Intensidad: Muy baja (1.04% de píxeles en movimiento)
+- Calidad: Alta coherencia espacial indica detección confiable

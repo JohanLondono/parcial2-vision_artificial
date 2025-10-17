@@ -92,7 +92,7 @@ class HoughAnalyzer:
         Returns:
             dict: Resultados de la detección de líneas
         """
-        print("🔍 Detectando líneas con Transformada de Hough...")
+        print("Detectando líneas con Transformada de Hough...")
         
         # Preprocesamiento
         imagen_gris, bordes = self.preprocesar_imagen(imagen)
@@ -216,7 +216,7 @@ class HoughAnalyzer:
         Returns:
             dict: Resultados de la detección de círculos
         """
-        print("🔍 Detectando círculos con Transformada de Hough...")
+        print("Detectando círculos con Transformada de Hough...")
         
         # Preprocesamiento
         imagen_gris, bordes = self.preprocesar_imagen(imagen)
@@ -394,7 +394,7 @@ class HoughAnalyzer:
             if nombre_imagen is None:
                 nombre_imagen = os.path.basename(imagen_path)
             
-            print(f"🔄 Análisis Hough completo para: {nombre_imagen}")
+            print(f"Análisis Hough completo para: {nombre_imagen}")
             
             # Análisis de líneas
             resultados_lineas = self.detectar_lineas_hough(imagen, visualizar=False)
@@ -425,11 +425,11 @@ class HoughAnalyzer:
             
             self.current_results.append(resultado_completo)
             
-            print(f"✅ Análisis Hough completado para: {nombre_imagen}")
+            print(f"Análisis Hough completado para: {nombre_imagen}")
             return resultado_completo
             
         except Exception as e:
-            print(f"❌ Error al procesar {imagen_path}: {str(e)}")
+            print(f"Error al procesar {imagen_path}: {str(e)}")
             return None
     
     def _calcular_estadisticas(self, datos):
@@ -533,7 +533,7 @@ class HoughAnalyzer:
     def guardar_resultados(self, formato='csv'):
         """Guarda los resultados del análisis."""
         if not self.current_results:
-            print("❌ No hay resultados para guardar.")
+            print("No hay resultados para guardar.")
             return
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -542,51 +542,51 @@ class HoughAnalyzer:
             df = pd.DataFrame(self.current_results)
             archivo_csv = os.path.join(self.results_dir, f'hough_analysis_{timestamp}.csv')
             df.to_csv(archivo_csv, index=False)
-            print(f"💾 Resultados CSV guardados: {archivo_csv}")
+            print(f"Resultados CSV guardados: {archivo_csv}")
             
         elif formato.lower() == 'json':
             import json
             archivo_json = os.path.join(self.results_dir, f'hough_analysis_{timestamp}.json')
             with open(archivo_json, 'w', encoding='utf-8') as f:
                 json.dump(self.current_results, f, indent=2, ensure_ascii=False, default=str)
-            print(f"💾 Resultados JSON guardados: {archivo_json}")
+            print(f"Resultados JSON guardados: {archivo_json}")
     
     def generar_reporte_hough(self):
         """Genera un reporte del análisis de Hough."""
         if not self.current_results:
-            print("❌ No hay resultados para el reporte.")
+            print("No hay resultados para el reporte.")
             return
         
-        print("\n📋 REPORTE ANÁLISIS TRANSFORMADA DE HOUGH")
+        print("\nREPORTE ANÁLISIS TRANSFORMADA DE HOUGH")
         print("=" * 50)
-        print(f"📊 Imágenes analizadas: {len(self.current_results)}")
+        print(f"Imágenes analizadas: {len(self.current_results)}")
         
         # Estadísticas de líneas
         total_lineas = sum(r.get('num_lineas_total', 0) for r in self.current_results)
         promedio_lineas = total_lineas / len(self.current_results)
         
-        print(f"📏 Total líneas detectadas: {total_lineas}")
-        print(f"📏 Promedio líneas por imagen: {promedio_lineas:.2f}")
+        print(f"Total líneas detectadas: {total_lineas}")
+        print(f"Promedio líneas por imagen: {promedio_lineas:.2f}")
         
         # Estadísticas de círculos
         total_circulos = sum(r.get('num_circulos_total', 0) for r in self.current_results)
         promedio_circulos = total_circulos / len(self.current_results)
         
-        print(f"⭕ Total círculos detectados: {total_circulos}")
-        print(f"⭕ Promedio círculos por imagen: {promedio_circulos:.2f}")
+        print(f"Total círculos detectados: {total_circulos}")
+        print(f"Promedio círculos por imagen: {promedio_circulos:.2f}")
         
         # Top imágenes por detecciones
         imagenes_lineas = [(r['Imagen'], r.get('num_lineas_total', 0)) for r in self.current_results]
         imagenes_lineas.sort(key=lambda x: x[1], reverse=True)
         
-        print(f"\n🏆 TOP 3 - MAYOR DETECCIÓN DE LÍNEAS:")
+        print(f"\nTOP 3 - MAYOR DETECCIÓN DE LÍNEAS:")
         for i, (imagen, num_lineas) in enumerate(imagenes_lineas[:3], 1):
             print(f"   {i}. {imagen}: {num_lineas} líneas")
         
         imagenes_circulos = [(r['Imagen'], r.get('num_circulos_total', 0)) for r in self.current_results]
         imagenes_circulos.sort(key=lambda x: x[1], reverse=True)
         
-        print(f"\n🎯 TOP 3 - MAYOR DETECCIÓN DE CÍRCULOS:")
+        print(f"\nTOP 3 - MAYOR DETECCIÓN DE CÍRCULOS:")
         for i, (imagen, num_circulos) in enumerate(imagenes_circulos[:3], 1):
             print(f"   {i}. {imagen}: {num_circulos} círculos")
         

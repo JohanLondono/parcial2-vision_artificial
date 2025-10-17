@@ -43,10 +43,10 @@ def agregar_procesamiento_multiples_metodos():
         if tipos_deteccion is None:
             tipos_deteccion = ['llantas', 'senales', 'semaforos']
         
-        print(f"\n🚀 Iniciando procesamiento por lotes con TODOS los métodos")
-        print(f"📁 Carpeta: {carpeta_imagenes}")
-        print(f"🎯 Tipos de detección: {', '.join(tipos_deteccion)}")
-        print(f"🔧 Modo: TODOS los métodos por tipo de objeto")
+        print(f"\nIniciando procesamiento por lotes con TODOS los métodos")
+        print(f"Carpeta: {carpeta_imagenes}")
+        print(f"Tipos de detección: {', '.join(tipos_deteccion)}")
+        print(f"Modo: TODOS los métodos por tipo de objeto")
         
         # Asegurar que las extensiones estén cargadas
         agregar_metodos_multiples_llantas()
@@ -58,10 +58,10 @@ def agregar_procesamiento_multiples_metodos():
         imagenes = ImageHandler.obtener_imagenes_carpeta(carpeta_imagenes)
         
         if not imagenes:
-            print(f"❌ No se encontraron imágenes en: {carpeta_imagenes}")
+            print(f"No se encontraron imágenes en: {carpeta_imagenes}")
             return None
         
-        print(f"📊 Encontradas {len(imagenes)} imágenes para procesar")
+        print(f"Encontradas {len(imagenes)} imágenes para procesar")
         
         # Inicializar estadísticas mejoradas
         estadisticas_completas = {
@@ -107,7 +107,7 @@ def agregar_procesamiento_multiples_metodos():
         # Procesar cada imagen
         for i, ruta_imagen in enumerate(imagenes, 1):
             nombre_imagen = os.path.basename(ruta_imagen)
-            print(f"\n📸 Procesando imagen {i}/{len(imagenes)}: {nombre_imagen}")
+            print(f"\nProcesando imagen {i}/{len(imagenes)}: {nombre_imagen}")
             
             try:
                 # Cargar imagen
@@ -126,7 +126,7 @@ def agregar_procesamiento_multiples_metodos():
                 
                 # Procesar cada tipo de detección
                 for tipo in tipos_deteccion:
-                    print(f"  🔍 Procesando {tipo}...")
+                    print(f"Procesando {tipo}...")
                     
                     try:
                         if tipo == 'llantas':
@@ -171,17 +171,17 @@ def agregar_procesamiento_multiples_metodos():
                                         stats['imagenes_exitosas'] += 1
                                         stats['tiempo_total'] += res.get('tiempo_ejecucion', 0)
                                         
-                                        print(f"    ✅ {metodo}: {len(objetos_detectados)} {tipo} detectados")
+                                        print(f"{metodo}: {len(objetos_detectados)} {tipo} detectados")
                                     else:
                                         stats['errores'] += 1
-                                        print(f"    ❌ {metodo}: Error - {res.get('error', 'Desconocido')}")
+                                        print(f"{metodo}: Error - {res.get('error', 'Desconocido')}")
                         else:
-                            print(f"    ❌ Error procesando {tipo}")
+                            print(f"Error procesando {tipo}")
                             resultados_imagen['resultados_por_tipo'][tipo] = {'error': 'Falló el procesamiento'}
                             
                     except Exception as e:
                         error_msg = f"Error procesando {tipo} en {nombre_imagen}: {e}"
-                        print(f"    ❌ {error_msg}")
+                        print(f"{error_msg}")
                         estadisticas_completas['errores'].append(error_msg)
                         resultados_imagen['resultados_por_tipo'][tipo] = {'error': str(e)}
                 
@@ -189,11 +189,11 @@ def agregar_procesamiento_multiples_metodos():
                 estadisticas_completas['resultados_por_imagen'][nombre_imagen] = resultados_imagen
                 estadisticas_completas['imagenes_procesadas'] += 1
                 
-                print(f"  ✅ Imagen {nombre_imagen} procesada exitosamente")
+                print(f"Imagen {nombre_imagen} procesada exitosamente")
                 
             except Exception as e:
                 error_msg = f"Error general procesando {nombre_imagen}: {e}"
-                print(f"  ❌ {error_msg}")
+                print(f"{error_msg}")
                 estadisticas_completas['errores'].append(error_msg)
                 estadisticas_completas['imagenes_con_error'] += 1
         
@@ -228,7 +228,7 @@ def agregar_procesamiento_multiples_metodos():
             with open(ruta_json, 'w', encoding='utf-8') as f:
                 json.dump(estadisticas, f, indent=2, ensure_ascii=False)
             
-            print(f"📄 Reporte JSON guardado: {ruta_json}")
+            print(f"Reporte JSON guardado: {ruta_json}")
             
             # Generar reporte de texto legible
             nombre_txt = f"resumen_procesamiento_multiples_metodos_{timestamp}.txt"
@@ -288,22 +288,22 @@ def agregar_procesamiento_multiples_metodos():
                     for error in estadisticas['errores']:
                         f.write(f"  - {error}\n")
             
-            print(f"📄 Reporte de texto guardado: {ruta_txt}")
+            print(f"Reporte de texto guardado: {ruta_txt}")
             
         except Exception as e:
-            print(f"⚠️  Error generando reporte: {e}")
+            print(f"Error generando reporte: {e}")
     
     def _mostrar_resumen_procesamiento_completo(self, estadisticas):
         """
         Muestra un resumen en consola del procesamiento completo.
         """
-        print(f"\n🎉 PROCESAMIENTO COMPLETO FINALIZADO")
+        print(f"\nPROCESAMIENTO COMPLETO FINALIZADO")
         print("=" * 60)
-        print(f"⏱️  Tiempo total: {estadisticas['tiempo_total']:.2f} segundos")
-        print(f"📸 Imágenes procesadas: {estadisticas['imagenes_procesadas']}")
-        print(f"❌ Imágenes con error: {estadisticas['imagenes_con_error']}")
+        print(f"Tiempo total: {estadisticas['tiempo_total']:.2f} segundos")
+        print(f"Imágenes procesadas: {estadisticas['imagenes_procesadas']}")
+        print(f"Imágenes con error: {estadisticas['imagenes_con_error']}")
         
-        print(f"\n📊 RESUMEN POR MÉTODO:")
+        print(f"\nRESUMEN POR MÉTODO:")
         print("-" * 50)
         print(f"{'Método':<20} {'Detecciones':<12} {'Éxito':<8} {'Errores':<8}")
         print("-" * 50)
@@ -322,15 +322,15 @@ def agregar_procesamiento_multiples_metodos():
         print(f"   Más detecciones: {mejor_detecciones[0]} ({mejor_detecciones[1]['total_detecciones']} objetos)")
         print(f"   Más rápido: {mejor_tiempo[0]} ({mejor_tiempo[1]['tiempo_total']:.3f}s)")
         
-        print(f"\n📁 Resultados guardados en: {self.directorio_salida}/")
-        print(f"📄 Reportes detallados en: {self.directorio_salida}/reportes/")
+        print(f"\nResultados guardados en: {self.directorio_salida}/")
+        print(f"Reportes detallados en: {self.directorio_salida}/reportes/")
     
     # Agregar el método a la clase ProcesadorLotes
     ProcesadorLotes.procesar_carpeta_todos_metodos = procesar_carpeta_todos_metodos
     ProcesadorLotes._generar_reporte_completo_multiples_metodos = _generar_reporte_completo_multiples_metodos
     ProcesadorLotes._mostrar_resumen_procesamiento_completo = _mostrar_resumen_procesamiento_completo
     
-    print("✅ Extensión de procesamiento con múltiples métodos agregada")
+    print("Extensión de procesamiento con múltiples métodos agregada")
 
 if __name__ == "__main__":
     # Prueba del sistema

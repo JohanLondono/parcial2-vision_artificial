@@ -86,7 +86,7 @@ class AdvancedAnalyzer:
         Returns:
             dict: Características FREAK extraídas
         """
-        print("🔍 Extrayendo características FREAK...")
+        print("Extrayendo características FREAK...")
         
         # Convertir a escala de grises
         if len(imagen.shape) == 3:
@@ -106,7 +106,7 @@ class AdvancedAnalyzer:
             freak_available = True
         except (AttributeError, cv2.error):
             # Fallback usando ORB para puntos clave y análisis similar
-            print("⚠️  FREAK no disponible, usando análisis alternativo...")
+            print("FREAK no disponible, usando análisis alternativo...")
             orb = cv2.ORB_create(nfeatures=500)
             keypoints, descriptors = orb.detectAndCompute(imagen_gris, None)
             freak_available = False
@@ -166,12 +166,12 @@ class AdvancedAnalyzer:
         # Mostrar información detallada en consola
         if mostrar_descriptores:
             descriptor_name = 'FREAK' if freak_available else 'ORB (Fallback)'
-            print(f"\n🔑 ANÁLISIS DE CARACTERÍSTICAS {descriptor_name}")
+            print(f"\nANÁLISIS DE CARACTERÍSTICAS {descriptor_name}")
             print("=" * 60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
-            print(f"🎯 Número de puntos clave detectados: {num_keypoints}")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Número de puntos clave detectados: {num_keypoints}")
             
-            print(f"\n📊 Estadísticas:")
+            print(f"\nEstadísticas:")
             print(f"• Algoritmo usado: {descriptor_name}")
             print(f"• Puntos clave encontrados: {len(keypoints)}")
             if descriptors is not None:
@@ -229,7 +229,7 @@ class AdvancedAnalyzer:
         Returns:
             dict: Características AKAZE extraídas
         """
-        print("🔍 Extrayendo características AKAZE...")
+        print("Extrayendo características AKAZE...")
         
         # Convertir a escala de grises
         if len(imagen.shape) == 3:
@@ -309,12 +309,12 @@ class AdvancedAnalyzer:
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"\n🔑 ANÁLISIS DE CARACTERÍSTICAS AKAZE")
+            print(f"\nANÁLISIS DE CARACTERÍSTICAS AKAZE")
             print("=" * 60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
             
             if num_keypoints > 0:
-                print(f"\n📊 Análisis AKAZE:")
+                print(f"\nAnálisis AKAZE:")
                 print(f"• Puntos clave detectados: {len(keypoints)}")
                 print(f"• Tamaño promedio: {np.mean(kp_size):.2f} ± {np.std(kp_size):.2f}")
                 print(f"• Respuesta promedio: {np.mean(kp_response):.4f}")
@@ -326,7 +326,7 @@ class AdvancedAnalyzer:
                 print(f"• Número de escalas: {akaze_stats['akaze_num_scales']}")
                 print(f"• Estabilidad multi-escala: {akaze_stats.get('akaze_scale_stability', 0):.4f}")
             else:
-                print("⚠️ No se detectaron puntos clave con AKAZE")
+                print("No se detectaron puntos clave con AKAZE")
             
             print("=" * 60)
         
@@ -366,10 +366,10 @@ class AdvancedAnalyzer:
         Returns:
             dict: Resultados de segmentación GrabCut
         """
-        print("🔍 Analizando segmentación GrabCut...")
+        print("Analizando segmentación GrabCut...")
         
         if len(imagen.shape) != 3:
-            print("⚠️  GrabCut requiere imagen en color, convirtiendo...")
+            print("GrabCut requiere imagen en color, convirtiendo...")
             imagen = cv2.cvtColor(imagen, cv2.COLOR_GRAY2BGR)
         
         h, w = imagen.shape[:2]
@@ -435,11 +435,11 @@ class AdvancedAnalyzer:
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"\n🔑 ANÁLISIS DE SEGMENTACIÓN GRABCUT")
+            print(f"\nANÁLISIS DE SEGMENTACIÓN GRABCUT")
             print("=" * 60)
-            print(f"📐 Dimensiones de la imagen: {imagen.shape}")
+            print(f"Dimensiones de la imagen: {imagen.shape}")
             
-            print(f"\n📊 Estadísticas GrabCut:")
+            print(f"\nEstadísticas GrabCut:")
             print(f"• Píxeles totales: {total_pixels:,}")
             print(f"• Píxeles de primer plano: {foreground_pixels:,} ({100*foreground_pixels/total_pixels:.1f}%)")
             print(f"• Píxeles de fondo: {background_pixels:,} ({100*background_pixels/total_pixels:.1f}%)")
@@ -492,7 +492,7 @@ class AdvancedAnalyzer:
         Returns:
             dict: Resultados del análisis LoG
         """
-        print("🔍 Analizando con Laplaciano de Gauss (LoG)...")
+        print("Analizando con Laplaciano de Gauss (LoG)...")
         
         # Convertir a escala de grises
         if len(imagen.shape) == 3:
@@ -579,11 +579,11 @@ class AdvancedAnalyzer:
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"\n🔑 ANÁLISIS LAPLACIANO DE GAUSS (LoG)")
+            print(f"\nANÁLISIS LAPLACIANO DE GAUSS (LoG)")
             print("=" * 60)
-            print(f"📐 Dimensiones de la imagen: {imagen_gris.shape}")
+            print(f"Dimensiones de la imagen: {imagen_gris.shape}")
             
-            print(f"\n📊 Estadísticas LoG:")
+            print(f"\nEstadísticas LoG:")
             print(f"• Valores de sigma analizados: {self.config['log']['sigma_values']}")
             print(f"• Número de blobs detectados: {num_blobs}")
             print(f"• Densidad de blobs: {detection_stats['log_blob_density']:.6f}")
@@ -595,7 +595,7 @@ class AdvancedAnalyzer:
                 print(f"• Consistencia entre escalas: {scale_consistency.get('log_scale_consistency', 0):.4f}")
             
             # Estadísticas por escala
-            print(f"\n📈 Análisis multi-escala:")
+            print(f"\nAnálisis multi-escala:")
             for i, sigma in enumerate(self.config['log']['sigma_values']):
                 if i < len(log_stats):
                     response_mean = log_stats.get(f'log_sigma_{sigma}_mean', 0)
@@ -637,7 +637,7 @@ class AdvancedAnalyzer:
         Returns:
             dict: Resultados del análisis de flujo óptico
         """
-        print("🔍 Analizando flujo óptico...")
+        print("Analizando flujo óptico...")
         
         # Si imagen2 es una ruta (string), cargarla
         if isinstance(imagen2, str):
@@ -645,17 +645,17 @@ class AdvancedAnalyzer:
                 imagen2_ruta = imagen2  # Guardar la ruta original
                 imagen2_cargada = cv2.imread(imagen2)
                 if imagen2_cargada is None:
-                    print(f"❌ Error: No se pudo cargar la imagen: {imagen2}")
+                    print(f"Error: No se pudo cargar la imagen: {imagen2}")
                     return None
                 imagen2 = imagen2_cargada
-                print(f"✅ Segunda imagen cargada: {os.path.basename(imagen2_ruta)}")
+                print(f"Segunda imagen cargada: {os.path.basename(imagen2_ruta)}")
             except Exception as e:
-                print(f"❌ Error cargando segunda imagen: {e}")
+                print(f"Error cargando segunda imagen: {e}")
                 return None
         
         # Si solo se proporciona una imagen, crear una versión desplazada
         if imagen2 is None:
-            print("⚠️  Solo una imagen proporcionada, creando desplazamiento artificial...")
+            print("Solo una imagen proporcionada, creando desplazamiento artificial...")
             # Crear desplazamiento artificial para demostrar
             if len(imagen1.shape) == 3:
                 imagen1_gris = cv2.cvtColor(imagen1, cv2.COLOR_BGR2GRAY)
@@ -721,11 +721,11 @@ class AdvancedAnalyzer:
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"\n🔑 ANÁLISIS DE FLUJO ÓPTICO")
+            print(f"\nANÁLISIS DE FLUJO ÓPTICO")
             print("=" * 60)
-            print(f"📐 Dimensiones de la imagen: {imagen1_gris.shape}")
+            print(f"Dimensiones de la imagen: {imagen1_gris.shape}")
             
-            print(f"\n📊 Estadísticas Optical Flow:")
+            print(f"\nEstadísticas Optical Flow:")
             print(f"• Algoritmo: Farneback (Flujo óptico denso)")
             print(f"• Magnitud promedio: {flow_stats['optical_flow_mean_magnitude']:.4f}")
             print(f"• Magnitud máxima: {flow_stats['optical_flow_max_magnitude']:.4f}")
@@ -737,7 +737,7 @@ class AdvancedAnalyzer:
             print(f"• Coherencia espacial: {flow_stats['optical_flow_spatial_coherence']:.4f}")
             
             # Información sobre el método
-            print(f"\n⚙️ Configuración:")
+            print(f"\nConfiguración:")
             print(f"• Escala piramidal: {self.config['optical_flow']['pyr_scale']}")
             print(f"• Niveles: {self.config['optical_flow']['levels']}")
             print(f"• Tamaño ventana: {self.config['optical_flow']['winsize']}")
@@ -781,19 +781,19 @@ class AdvancedAnalyzer:
         Returns:
             dict: Resultados del análisis de flujo óptico (método profesora)
         """
-        print("🔍 Analizando flujo óptico (Método de la Profesora)...")
+        print("Analizando flujo óptico (Método Normal)...")
         
         # Si imagen2 es una ruta (string), cargarla
         if isinstance(imagen2, str):
             try:
                 frame2 = cv2.imread(imagen2, cv2.IMREAD_GRAYSCALE)
                 if frame2 is None:
-                    print(f"❌ Error: No se pudo cargar la imagen: {imagen2}")
+                    print(f"Error: No se pudo cargar la imagen: {imagen2}")
                     frame2 = None
                 else:
-                    print(f"✅ Segunda imagen cargada: {os.path.basename(imagen2)}")
+                    print(f"Segunda imagen cargada: {os.path.basename(imagen2)}")
             except Exception as e:
-                print(f"❌ Error cargando segunda imagen: {e}")
+                print(f"Error cargando segunda imagen: {e}")
                 frame2 = None
         elif imagen2 is not None:
             # Convertir a escala de grises si es necesario
@@ -820,7 +820,7 @@ class AdvancedAnalyzer:
         
         # Verificar si las imágenes se cargaron correctamente
         if frame1 is None or frame2 is None:
-            print("⚠️ Problema con las imágenes, creando frames de ejemplo...")
+            print("Problema con las imágenes, creando frames de ejemplo...")
             # Crear frames de ejemplo (código exacto de la profesora)
             frame1 = np.zeros((300, 400), dtype=np.uint8)
             cv2.circle(frame1, (100, 150), 30, 255, -1)
@@ -870,19 +870,19 @@ class AdvancedAnalyzer:
         
         # Mostrar información detallada en consola
         if mostrar_descriptores:
-            print(f"\n🔑 ANÁLISIS DE FLUJO ÓPTICO (MÉTODO PROFESORA)")
+            print(f"\nANÁLISIS DE FLUJO ÓPTICO (MÉTODO NOMRAL)")
             print("=" * 60)
-            print(f"📐 Dimensiones de la imagen: {frame1.shape}")
+            print(f"Dimensiones de la imagen: {frame1.shape}")
             
-            print(f"\n📊 Estadísticas Optical Flow:")
-            print(f"• Método: Farneback (Implementación Profesora)")
+            print(f"\nEstadísticas Optical Flow:")
+            print(f"• Método: Farneback")
             print(f"• Magnitud promedio: {mag_promedio:.4f}")
             print(f"• Magnitud máxima: {mag_maxima:.4f}")
             print(f"• Desviación estándar magnitud: {mag_std:.4f}")
             print(f"• Ángulo promedio: {np.degrees(ang_promedio):.1f}°")
             
             # Información sobre el método
-            print(f"\n⚙️ Parámetros utilizados:")
+            print(f"\nParámetros utilizados:")
             print(f"• Escala piramidal: 0.5")
             print(f"• Niveles: 3")
             print(f"• Tamaño ventana: 15")
@@ -930,7 +930,7 @@ class AdvancedAnalyzer:
         Returns:
             dict: Análisis completo de la secuencia de imágenes
         """
-        print(f"📁 Analizando secuencia de imágenes en carpeta: {carpeta_path}")
+        print(f"Analizando secuencia de imágenes en carpeta: {carpeta_path}")
         
         import glob
         
@@ -944,11 +944,11 @@ class AdvancedAnalyzer:
         archivos_imagen = sorted(glob.glob(patron_completo))
         
         if len(archivos_imagen) < 2:
-            print(f"❌ Error: Se necesitan al menos 2 imágenes. Encontradas: {len(archivos_imagen)}")
+            print(f"Error: Se necesitan al menos 2 imágenes. Encontradas: {len(archivos_imagen)}")
             return None
         
-        print(f"📊 Encontradas {len(archivos_imagen)} imágenes")
-        print(f"🔍 Analizando secuencia de movimientos...")
+        print(f"Encontradas {len(archivos_imagen)} imágenes")
+        print(f"Analizando secuencia de movimientos...")
         
         # Variables para análisis de secuencia
         secuencia_flujos = []
@@ -960,20 +960,20 @@ class AdvancedAnalyzer:
         try:
             imagen_anterior = cv2.imread(archivos_imagen[0], cv2.IMREAD_GRAYSCALE)
             if imagen_anterior is None:
-                print(f"❌ Error cargando primera imagen: {archivos_imagen[0]}")
+                print(f"Error cargando primera imagen: {archivos_imagen[0]}")
                 return None
         except Exception as e:
             print(f"❌ Error: {e}")
             return None
         
-        print("🔄 Procesando secuencia...")
+        print("Procesando secuencia...")
         
         for i in range(1, len(archivos_imagen)):
             try:
                 # Cargar imagen actual
                 imagen_actual = cv2.imread(archivos_imagen[i], cv2.IMREAD_GRAYSCALE)
                 if imagen_actual is None:
-                    print(f"⚠️ Saltando imagen corrupta: {archivos_imagen[i]}")
+                    print(f"Saltando imagen corrupta: {archivos_imagen[i]}")
                     continue
                 
                 # Redimensionar si es necesario para que coincidan
@@ -1026,17 +1026,17 @@ class AdvancedAnalyzer:
                 
                 # Mostrar progreso
                 if i % 5 == 0:
-                    print(f"📈 Procesadas {i}/{len(archivos_imagen)-1} transiciones...")
+                    print(f"Procesadas {i}/{len(archivos_imagen)-1} transiciones...")
                     
             except Exception as e:
-                print(f"⚠️ Error procesando {archivos_imagen[i]}: {e}")
+                print(f"Error procesando {archivos_imagen[i]}: {e}")
                 continue
         
         # Análisis global de la secuencia
         if estadisticas_secuencia:
             analisis_global = self._analizar_secuencia_global(estadisticas_secuencia, cambios_movimiento)
         else:
-            print("❌ No se pudieron procesar las imágenes")
+            print("No se pudieron procesar las imágenes")
             return None
         
         # Resultados finales
@@ -1052,8 +1052,8 @@ class AdvancedAnalyzer:
             'nombre_secuencia': nombre_secuencia
         }
         
-        print(f"✅ Análisis de secuencia completado: {len(estadisticas_secuencia)} transiciones procesadas")
-        print(f"🔄 Cambios de movimiento detectados: {len(cambios_movimiento)}")
+        print(f"Análisis de secuencia completado: {len(estadisticas_secuencia)} transiciones procesadas")
+        print(f"Cambios de movimiento detectados: {len(cambios_movimiento)}")
         
         # Guardar resultados
         if guardar_resultados:
@@ -1082,7 +1082,7 @@ class AdvancedAnalyzer:
         Returns:
             dict: Análisis temporal del video con optical flow
         """
-        print(f"🎬 Analizando video: {video_path}")
+        print(f"Analizando video: {video_path}")
         
         # Verificar que el archivo existe
         if not os.path.exists(video_path):
@@ -1093,7 +1093,7 @@ class AdvancedAnalyzer:
             # Abrir video
             cap = cv2.VideoCapture(video_path)
             if not cap.isOpened():
-                print(f"❌ Error: No se pudo abrir el video: {video_path}")
+                print(f"Error: No se pudo abrir el video: {video_path}")
                 return None
             
             # Propiedades del video
@@ -1103,7 +1103,7 @@ class AdvancedAnalyzer:
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             duration = total_frames / fps if fps > 0 else 0
             
-            print(f"📊 Propiedades del video:")
+            print(f"Propiedades del video:")
             print(f"• Resolución: {width}x{height}")
             print(f"• FPS: {fps:.2f}")
             print(f"• Total de frames: {total_frames}")
@@ -1116,7 +1116,7 @@ class AdvancedAnalyzer:
             # Leer primer frame
             ret, frame1 = cap.read()
             if not ret:
-                print("❌ Error: No se pudo leer el primer frame")
+                print("Error: No se pudo leer el primer frame")
                 cap.release()
                 return None
             
@@ -1132,7 +1132,7 @@ class AdvancedAnalyzer:
             frame_count = 0
             processed_count = 0
             
-            print("🔄 Procesando frames...")
+            print("Procesando frames...")
             
             while True:
                 ret, frame2 = cap.read()
@@ -1193,7 +1193,7 @@ class AdvancedAnalyzer:
                 
                 # Mostrar progreso
                 if processed_count % 10 == 0:
-                    print(f"📈 Procesados {processed_count}/{frames_to_process} frames...")
+                    print(f"Procesados {processed_count}/{frames_to_process} frames...")
             
             cap.release()
             
@@ -1218,7 +1218,7 @@ class AdvancedAnalyzer:
                 'nombre_video': nombre_video
             }
             
-            print(f"✅ Análisis de video completado: {processed_count} frames procesados")
+            print(f"Análisis de video completado: {processed_count} frames procesados")
             
             # Guardar resultados
             if guardar_resultados:
@@ -1230,7 +1230,7 @@ class AdvancedAnalyzer:
             return resultados
             
         except Exception as e:
-            print(f"❌ Error durante el análisis del video: {e}")
+            print(f"Error durante el análisis del video: {e}")
             return None
     
     def _extraer_patron_movimiento(self, flow, magnitude, angle):
@@ -1462,19 +1462,19 @@ class AdvancedAnalyzer:
         
         # Mostrar resumen textual
         temporal_analysis = resultados['temporal_analysis']
-        print(f"\n📊 RESUMEN DEL ANÁLISIS DE VIDEO")
+        print(f"\nRESUMEN DEL ANÁLISIS DE VIDEO")
         print("=" * 60)
-        print(f"🎬 Video: {os.path.basename(resultados['video_path'])}")
-        print(f"⏱️ Duración: {temporal_analysis['duracion_total']:.2f} segundos")
-        print(f"📈 Nivel de actividad: {temporal_analysis['nivel_actividad'].upper()}")
-        print(f"🎯 Patrón dominante: {temporal_analysis['patron_dominante']}")
-        print(f"🔄 Periodicidad: {'SÍ' if temporal_analysis['periodicidad']['detected'] else 'NO'}")
+        print(f"Video: {os.path.basename(resultados['video_path'])}")
+        print(f"Duración: {temporal_analysis['duracion_total']:.2f} segundos")
+        print(f"Nivel de actividad: {temporal_analysis['nivel_actividad'].upper()}")
+        print(f"Patrón dominante: {temporal_analysis['patron_dominante']}")
+        print(f"Periodicidad: {'SÍ' if temporal_analysis['periodicidad']['detected'] else 'NO'}")
         if temporal_analysis['periodicidad']['detected']:
             print(f"   → Período: {temporal_analysis['periodicidad']['period']} frames")
             print(f"   → Confianza: {temporal_analysis['periodicidad']['confidence']:.3f}")
-        print(f"⚡ Eventos significativos: {temporal_analysis['num_eventos']}")
-        print(f"📊 Estabilidad: {temporal_analysis['estabilidad']}")
-        print(f"📈 Tendencia: {temporal_analysis['tendencia_movimiento']}")
+        print(f"Eventos significativos: {temporal_analysis['num_eventos']}")
+        print(f"Estabilidad: {temporal_analysis['estabilidad']}")
+        print(f"Tendencia: {temporal_analysis['tendencia_movimiento']}")
         print("=" * 60)
 
     def analisis_completo_avanzado(self, imagen_path, imagen2_path=None, nombre_imagen=None):
@@ -1500,12 +1500,12 @@ class AdvancedAnalyzer:
             if imagen2_path:
                 imagen2 = cv2.imread(imagen2_path)
                 if imagen2 is None:
-                    print(f"⚠️  No se pudo cargar la segunda imagen: {imagen2_path}")
+                    print(f"No se pudo cargar la segunda imagen: {imagen2_path}")
             
             if nombre_imagen is None:
                 nombre_imagen = os.path.basename(imagen_path)
             
-            print(f"🔄 Análisis avanzado para: {nombre_imagen}")
+            print(f"Análisis avanzado para: {nombre_imagen}")
             
             # Análisis FREAK
             resultados_freak = self.extraer_caracteristicas_freak(imagen1, visualizar=False)
@@ -1543,11 +1543,11 @@ class AdvancedAnalyzer:
             
             self.current_results.append(resultado_completo)
             
-            print(f"✅ Análisis avanzado completado para: {nombre_imagen}")
+            print(f"Análisis avanzado completado para: {nombre_imagen}")
             return resultado_completo
             
         except Exception as e:
-            print(f"❌ Error al procesar {imagen_path}: {str(e)}")
+            print(f"Error al procesar {imagen_path}: {str(e)}")
             return None
     
     def _analizar_secuencia_global(self, estadisticas_secuencia, cambios_movimiento):
@@ -1870,7 +1870,7 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"freak_visualization_{resultados['nombre_imagen']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Visualización FREAK guardada: {imagen_filename}")
+            print(f"Visualización FREAK guardada: {imagen_filename}")
         
         plt.show()
     
@@ -1900,7 +1900,7 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"akaze_visualization_{resultados['nombre_imagen']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Visualización AKAZE guardada: {imagen_filename}")
+            print(f"Visualización AKAZE guardada: {imagen_filename}")
         
         plt.show()
     
@@ -1942,7 +1942,7 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"grabcut_visualization_{resultados['nombre_imagen']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Visualización GrabCut guardada: {imagen_filename}")
+            print(f"Visualización GrabCut guardada: {imagen_filename}")
         
         plt.show()
     
@@ -1972,7 +1972,7 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"log_visualization_{resultados['nombre_imagen']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Visualización LoG guardada: {imagen_filename}")
+            print(f"Visualización LoG guardada: {imagen_filename}")
         
         plt.show()
     
@@ -2041,7 +2041,7 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"optical_flow_visualization_{resultados['nombre_imagen']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Visualización Optical Flow guardada: {imagen_filename}")
+            print(f"Visualización Optical Flow guardada: {imagen_filename}")
         
         plt.show()
     
@@ -2073,14 +2073,14 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"optical_flow_profesora_{resultados['nombre_imagen']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Visualización Optical Flow (Profesora) guardada: {imagen_filename}")
+            print(f"Visualización Optical Flow (Normal) guardada: {imagen_filename}")
         
         plt.show()
         
         # Mostrar estadísticas como en el código original
-        print("✅ Optical Flow básico completado")
-        print(f"📊 Magnitud promedio del flujo: {resultados['optical_flow_mean_magnitude']:.4f}")
-        print(f"📊 Magnitud máxima: {resultados['optical_flow_max_magnitude']:.4f}")
+        print("Optical Flow básico completado")
+        print(f"Magnitud promedio del flujo: {resultados['optical_flow_mean_magnitude']:.4f}")
+        print(f"Magnitud máxima: {resultados['optical_flow_max_magnitude']:.4f}")
     
     def _visualizar_secuencia_imagenes(self, resultados):
         """Visualiza el análisis de secuencia de imágenes."""
@@ -2089,7 +2089,7 @@ class AdvancedAnalyzer:
         analisis_global = resultados['analisis_global']
         
         if not estadisticas:
-            print("⚠️ No hay estadísticas para visualizar")
+            print("No hay estadísticas para visualizar")
             return
         
         # Crear visualización completa
@@ -2174,31 +2174,31 @@ class AdvancedAnalyzer:
             imagen_filename = os.path.join(self.results_dir, f"secuencia_analysis_{resultados['nombre_secuencia']}_{timestamp}.png")
             self.asegurar_directorio_existe(imagen_filename)
             plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
-            print(f"🖼️ Análisis de secuencia guardado: {imagen_filename}")
+            print(f"Análisis de secuencia guardado: {imagen_filename}")
         
         plt.show()
         
         # Mostrar resumen textual
-        print(f"\n📊 RESUMEN DEL ANÁLISIS DE SECUENCIA")
+        print(f"\nRESUMEN DEL ANÁLISIS DE SECUENCIA")
         print("=" * 60)
-        print(f"📁 Carpeta: {os.path.basename(resultados['carpeta_path'])}")
-        print(f"🖼️ Imágenes procesadas: {len(resultados['archivos_procesados'])}")
-        print(f"🔄 Transiciones analizadas: {analisis_global['transiciones_procesadas']}")
-        print(f"📈 Tendencia general: {analisis_global['tendencia_general'].upper()}")
-        print(f"📊 Estabilidad: {analisis_global['estabilidad']}")
-        print(f"📉 Variabilidad: {analisis_global['variabilidad']:.3f}")
-        print(f"⚡ Cambios significativos: {analisis_global['num_cambios_significativos']}")
-        print(f"🔝 Picos detectados: {analisis_global['num_picos']}")
-        print(f"🔽 Valles detectados: {analisis_global['num_valles']}")
-        print(f"🔄 Periodicidad: {'SÍ' if analisis_global['periodicidad_detectada'] else 'NO'}")
-        print(f"📏 Magnitud promedio: {analisis_global['magnitude_promedio']:.4f}")
-        print(f"📏 Rango: {analisis_global['magnitude_min']:.4f} - {analisis_global['magnitude_max']:.4f}")
+        print(f"Carpeta: {os.path.basename(resultados['carpeta_path'])}")
+        print(f"Imágenes procesadas: {len(resultados['archivos_procesados'])}")
+        print(f"Transiciones analizadas: {analisis_global['transiciones_procesadas']}")
+        print(f"Tendencia general: {analisis_global['tendencia_general'].upper()}")
+        print(f"Estabilidad: {analisis_global['estabilidad']}")
+        print(f"Variabilidad: {analisis_global['variabilidad']:.3f}")
+        print(f"Cambios significativos: {analisis_global['num_cambios_significativos']}")
+        print(f"Picos detectados: {analisis_global['num_picos']}")
+        print(f"Valles detectados: {analisis_global['num_valles']}")
+        print(f"Periodicidad: {'SÍ' if analisis_global['periodicidad_detectada'] else 'NO'}")
+        print(f"Magnitud promedio: {analisis_global['magnitude_promedio']:.4f}")
+        print(f"Rango: {analisis_global['magnitude_min']:.4f} - {analisis_global['magnitude_max']:.4f}")
         print("=" * 60)
 
     def guardar_resultados(self, formato='csv'):
         """Guarda los resultados del análisis."""
         if not self.current_results:
-            print("❌ No hay resultados para guardar.")
+            print("No hay resultados para guardar.")
             return
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -2208,7 +2208,7 @@ class AdvancedAnalyzer:
             archivo_csv = os.path.join(self.results_dir, f'advanced_analysis_{timestamp}.csv')
             os.makedirs(os.path.dirname(archivo_csv), exist_ok=True)
             df.to_csv(archivo_csv, index=False)
-            print(f"💾 Resultados CSV guardados: {archivo_csv}")
+            print(f"Resultados CSV guardados: {archivo_csv}")
         
         elif formato.lower() == 'json':
             import json
@@ -2216,17 +2216,17 @@ class AdvancedAnalyzer:
             os.makedirs(os.path.dirname(archivo_json), exist_ok=True)
             with open(archivo_json, 'w', encoding='utf-8') as f:
                 json.dump(self.current_results, f, indent=2, ensure_ascii=False, default=str)
-            print(f"💾 Resultados JSON guardados: {archivo_json}")
+            print(f"Resultados JSON guardados: {archivo_json}")
     
     def generar_reporte_avanzado(self):
         """Genera reporte del análisis avanzado."""
         if not self.current_results:
-            print("❌ No hay resultados para el reporte.")
+            print("No hay resultados para el reporte.")
             return
         
-        print("\n📋 REPORTE ANÁLISIS ALGORITMOS AVANZADOS")
+        print("\nREPORTE ANÁLISIS ALGORITMOS AVANZADOS")
         print("=" * 50)
-        print(f"📊 Imágenes analizadas: {len(self.current_results)}")
+        print(f"Imágenes analizadas: {len(self.current_results)}")
         
         # Estadísticas por algoritmo
         algoritmos = ['freak', 'akaze', 'grabcut', 'log', 'optical_flow']
@@ -2242,7 +2242,7 @@ class AdvancedAnalyzer:
             
             valores = [r.get(keypoints_key, 0) for r in self.current_results]
             if any(valores):
-                print(f"\n🔍 {algoritmo.upper()}:")
+                print(f"\n{algoritmo.upper()}:")
                 print(f"   Promedio: {np.mean(valores):.2f}")
                 print(f"   Desviación: {np.std(valores):.2f}")
                 print(f"   Máximo: {np.max(valores):.2f}")
@@ -2300,9 +2300,9 @@ class AdvancedAnalyzer:
             if len(keypoints) > 10:
                 txtfile.write(f"... y {len(keypoints) - 10} puntos más\n\n")
         
-        print(f"💾 Resultados FREAK guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
+        print(f"Resultados FREAK guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
     
     def _guardar_resultados_akaze(self, resultados, nombre_imagen):
         """Guarda los resultados AKAZE en archivos CSV y TXT."""
@@ -2346,9 +2346,9 @@ class AdvancedAnalyzer:
                 txtfile.write(f"  Respuesta: {kp.response:.6f}\n")
                 txtfile.write(f"  Octava: {kp.octave}\n\n")
         
-        print(f"💾 Resultados AKAZE guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
+        print(f"Resultados AKAZE guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
     
     def _guardar_resultados_grabcut(self, resultados, nombre_imagen):
         """Guarda los resultados GrabCut en archivos CSV y TXT."""
@@ -2385,9 +2385,9 @@ class AdvancedAnalyzer:
             txtfile.write(f"Píxeles de fondo: {int(resultados.get('grabcut_background_ratio', 0) * resultados['original_image'].size)}\n")
             txtfile.write(f"Número de regiones conectadas: {resultados.get('grabcut_num_regions', 0)}\n")
         
-        print(f"💾 Resultados GrabCut guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
+        print(f"Resultados GrabCut guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
     
     def _guardar_resultados_log(self, resultados, nombre_imagen):
         """Guarda los resultados LoG en archivos CSV y TXT."""
@@ -2473,9 +2473,9 @@ class AdvancedAnalyzer:
             if len(local_maxima) > 20:
                 txtfile.write(f"\n... y {len(local_maxima) - 20} blobs adicionales.\n")
         
-        print(f"💾 Resultados LoG guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
+        print(f"Resultados LoG guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
     
     def _guardar_resultados_optical_flow(self, resultados, nombre_imagen):
         """Guarda los resultados Optical Flow en archivos CSV y TXT."""
@@ -2522,9 +2522,9 @@ class AdvancedAnalyzer:
             txtfile.write(f"Magnitud promedio del movimiento: {resultados.get('optical_flow_mean_magnitude', 0):.6f}\n")
             txtfile.write(f"Porcentaje de píxeles en movimiento: {resultados.get('optical_flow_movement_ratio', 0)*100:.2f}%\n")
         
-        print(f"💾 Resultados Optical Flow guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
+        print(f"Resultados Optical Flow guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
     
     def _guardar_resultados_optical_flow_profesora(self, resultados, nombre_imagen):
         """Guarda resultados del optical flow usando el método de la profesora."""
@@ -2556,7 +2556,7 @@ class AdvancedAnalyzer:
         # Archivo TXT
         txt_filename = os.path.join(self.results_dir, f"optical_flow_profesora_{nombre_imagen}_{timestamp}.txt")
         with open(txt_filename, 'w', encoding='utf-8') as txtfile:
-            txtfile.write("ANÁLISIS OPTICAL FLOW - MÉTODO PROFESORA\n")
+            txtfile.write("ANÁLISIS OPTICAL FLOW - MÉTODO NORMAL\n")
             txtfile.write("=" * 50 + "\n")
             txtfile.write(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             txtfile.write(f"Imagen analizada: {nombre_imagen}\n\n")
@@ -2593,10 +2593,10 @@ class AdvancedAnalyzer:
         plt.savefig(imagen_filename, dpi=300, bbox_inches='tight')
         plt.close()
         
-        print("💾 Resultados Optical Flow (Método Profesora) guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
-        print(f"   🖼️ Imagen HSV: {imagen_filename}")
+        print("Resultados Optical Flow (Método Normal) guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
+        print(f"  Imagen HSV: {imagen_filename}")
     
     def _guardar_resultados_secuencia(self, resultados, nombre_secuencia):
         """Guarda resultados del análisis de secuencia de imágenes."""
@@ -2739,10 +2739,10 @@ class AdvancedAnalyzer:
         with open(json_filename, 'w', encoding='utf-8') as jsonfile:
             json.dump(json_data, jsonfile, indent=2, ensure_ascii=False)
         
-        print("💾 Resultados de análisis de secuencia guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
-        print(f"   📋 JSON: {json_filename}")
+        print("Resultados de análisis de secuencia guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
+        print(f"  JSON: {json_filename}")
 
     def _guardar_resultados_video(self, resultados, nombre_video):
         """Guarda resultados del análisis de video."""
@@ -2894,10 +2894,10 @@ class AdvancedAnalyzer:
         with open(json_filename, 'w', encoding='utf-8') as jsonfile:
             json.dump(json_data, jsonfile, indent=2, ensure_ascii=False)
         
-        print(f"💾 Resultados de análisis de video guardados:")
-        print(f"   📊 CSV: {csv_filename}")
-        print(f"   📝 TXT: {txt_filename}")
-        print(f"   📋 JSON: {json_filename}")
+        print(f"Resultados de análisis de video guardados:")
+        print(f"  CSV: {csv_filename}")
+        print(f"  TXT: {txt_filename}")
+        print(f"  JSON: {json_filename}")
 
     def asegurar_directorio_existe(self, ruta_archivo):
         """Asegura que el directorio para un archivo existe antes de guardarlo."""
